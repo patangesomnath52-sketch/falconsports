@@ -3,7 +3,7 @@
 // =====================================================
 
 // ---------- API CONFIG ----------
-const API_URL = 'http://localhost:5000/api';   // change for production
+const API_URL = '/api';
 
 // ---------- THEME TOGGLE (safe – no errors if button missing) ----------
 (function initTheme() {
