@@ -161,7 +161,7 @@
          <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
         <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
         <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
-       
+       <i class="far fa-user" onclick="window.location.href='signin.html'"></i>
       </div>
     </div>
   </header>
@@ -239,6 +239,34 @@
       document.getElementById('menuOverlay').classList.remove('show');
     }
   </script>
-  
+  <script>
+  // Check if a user is logged in (demo)
+  (function() {
+    const user = JSON.parse(localStorage.getItem('falconUser'));
+    const accountIcon = document.querySelector('.header-actions .fa-user');
+
+    if (user && user.loggedIn) {
+      // Change the user icon to show logged‑in state (optional)
+      if (accountIcon) {
+        accountIcon.classList.remove('fa-user');
+        accountIcon.classList.add('fa-user-check');
+        accountIcon.title = `Signed in as ${user.email}`;
+        accountIcon.onclick = function() {
+          // Sign out
+          localStorage.removeItem('falconUser');
+          showNotification('Signed out');
+          location.reload();
+        };
+      }
+    } else {
+      // Not logged in – clicking the user icon goes to sign‑in page
+      if (accountIcon) {
+        accountIcon.onclick = function() {
+          window.location.href = 'signin.html';
+        };
+      }
+    }
+  })();
+</script>
 </body>
 </html>
