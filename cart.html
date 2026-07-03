@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Your Cart</title>
+  <meta name="description" content="FalconSports shopping cart – review your items and checkout securely.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    .cart-page {
+      padding: 40px 0;
+    }
+    .cart-page h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .cart-empty {
+      text-align: center;
+      padding: 60px 0;
+    }
+    .cart-empty i {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .cart-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .cart-item:hover {
+      box-shadow: var(--shadow);
+    }
+    .cart-item-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .cart-item-details {
+      flex: 1;
+    }
+    .cart-item-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .cart-item-size {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .cart-item-price {
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .qty-control button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+    .qty-control button:hover {
+      background: var(--accent);
+      color: white;
+    }
+    .qty-control input {
+      width: 50px;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+      font-weight: 600;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .remove-btn {
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+    }
+    .remove-btn:hover {
+      text-decoration: underline;
+    }
+    .order-summary {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: sticky;
+      top: 100px;
+    }
+    .order-summary h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-row.total {
+      font-weight: 800;
+      font-size: 1.2rem;
+      border-bottom: none;
+    }
+    .coupon-section {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .coupon-section input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .checkout-btn {
+      width: 100%;
+      margin-top: 16px;
+      padding: 16px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <div class="container cart-page">
+    <h1>Your Cart</h1>
+    <div id="cartEmpty" class="cart-empty hidden">
+      <i class="fas fa-shopping-bag"></i>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything yet.</p>
+      <a href="collection.html" class="btn btn-accent" style="margin-top:20px;">Shop Collection</a>
+    </div>
+    <div class="cart-layout" id="cartLayout">
+      <div class="cart-items" id="cartItemsContainer"></div>
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">₹0</span></div>
+        <div class="summary-row"><span>Delivery</span><span id="summaryDelivery">₹0</span></div>
+        <div class="summary-row" id="discountRow" style="display:none;"><span>Discount</span><span id="summaryDiscount">-₹0</span></div>
+        <div class="summary-row total"><span>Total</span><span id="summaryTotal">₹0</span></div>
+        <div class="coupon-section">
+          <input type="text" id="couponCode" placeholder="Coupon code">
+          <button class="btn btn-outline" onclick="applyCoupon()">Apply</button>
+        </div>
+        <button class="btn btn-accent checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-grid">
+      <div><h4>FalconSports</h4><p>Premium sportswear engineered for athletes.</p></div>
+      <div><h4>Shop</h4><a href="collection.html">Collection</a><a href="shoes.html">Shoes</a><a href="kitbuilder.html">Kit Builder</a><a href="about.html">About</a></div>
+      <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div class="footer-bottom">
+      <img src="falcon-stacked.png" alt="FalconSports" style="height:40px; filter:invert(1); margin-bottom:10px;">
+      <p>© 2026 FalconSports. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // Cart page logic
+    const cartEmptyEl = document.getElementById('cartEmpty');
+    const cartLayoutEl = document.getElementById('cartLayout');
+    const cartItemsContainer = document.getElementById('cartItemsContainer');
+    const summarySubtotal = document.getElementById('summarySubtotal');
+    const summaryDelivery = document.getElementById('summaryDelivery');
+    const summaryDiscount = document.getElementById('summaryDiscount');
+    const discountRow = document.getElementById('discountRow');
+    const summaryTotal = document.getElementById('summaryTotal');
+
+    let cartData = JSON.parse(localStorage.getItem('falconCart')) || [];
+    let appliedCoupon = null;
+
+    function renderCart() {
+      if (cartData.length === 0) {
+        cartEmptyEl.classList.remove('hidden');
+        cartLayoutEl.style.display = 'none';
+        return;
+      }
+
+      cartEmptyEl.classList.add('hidden');
+      cartLayoutEl.style.display = 'grid';
+
+      cartItemsContainer.innerHTML = cartData.map((item, index) => {
+        const quantity = item.qty || 1;
+        const price = item.price;
+        const size = item.size || '';
+        const image = item.image || 'https://placehold.co/120x120/1a1a1a/white?text=Falcon';
+        return `
+          <div class="cart-item">
+            <img src="${image}" alt="${item.name}" class="cart-item-image">
+            <div class="cart-item-details">
+              <div class="cart-item-name">${item.name}</div>
+              ${size ? `<div class="cart-item-size">Size: ${size}</div>` : ''}
+              <div class="cart-item-price">₹${price}</div>
+              <div class="cart-item-actions">
+                <div class="qty-control">
+                  <button onclick="changeQty(${index}, -1)">−</button>
+                  <input type="number" value="${quantity}" min="1" readonly>
+                  <button onclick="changeQty(${index}, 1)">+</button>
+                </div>
+                <button class="remove-btn" onclick="removeCartItem(${index})">Remove</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const subtotal = cartData.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+      const delivery = subtotal >= 1999 ? 0 : 149;
+      let discount = 0;
+      if (appliedCoupon) {
+        discount = Math.round(subtotal * appliedCoupon.discountPercent / 100);
+      }
+      const total = subtotal + delivery - discount;
+
+      summarySubtotal.textContent = '₹' + subtotal;
+      summaryDelivery.textContent = delivery === 0 ? 'FREE' : '₹' + delivery;
+      if (discount > 0) {
+        discountRow.style.display = 'flex';
+        summaryDiscount.textContent = '-₹' + discount;
+      } else {
+        discountRow.style.display = 'none';
+      }
+      summaryTotal.textContent = '₹' + total;
+
+      // Update global cart counter
+      if (typeof updateCartUI === 'function') updateCartUI();
+    }
+
+    window.changeQty = (index, delta) => {
+      const item = cartData[index];
+      if (!item) return;
+      item.qty = (item.qty || 1) + delta;
+      if (item.qty < 1) item.qty = 1;
+      localStorage.setItem('falconCart', JSON.stringify(cartData));
+      renderCart();
+    };
+
+    window.removeCartItem = (index) => {
+      cartData.splice(index, 1);
+      localStorage.setItem('falconCart', JSON.stringify(cartData));
+      renderCart();
+      showNotification('Item removed from cart');
+    };
+
+    window.applyCoupon = async function() {
+      const code = document.getElementById('couponCode').value.trim().toUpperCase();
+      if (!code) return showNotification('Please enter a coupon code');
+      const result = await validateCoupon(code);
+      if (result.valid) {
+        appliedCoupon = { code, discountPercent: result.discountPercent };
+        showNotification(`Coupon ${code} applied!`);
+      } else {
+        appliedCoupon = null;
+        showNotification(result.message || 'Invalid coupon');
+      }
+      renderCart();
+    };
+
+    window.checkout = function() {
+      if (cartData.length === 0) {
+        showNotification('Your cart is empty');
+        return;
+      }
+      const couponParam = appliedCoupon ? `?coupon=${appliedCoupon.code}` : '';
+      window.location.href = `checkout.html${couponParam}`;
+    };
+
+    // Initial render
+    renderCart();
+  </script>
+</body>
+</html>

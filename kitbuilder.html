@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Build Your Kit</title>
+  <meta name="description" content="FalconSports Kit Builder – Assemble your complete sports outfit from premium T-Shirts, Track Pants, Shorts, and Shoes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    /* Page‑specific overrides */
+    .kit-hero {
+      position: relative;
+      height: 50vh;
+      min-height: 100px;
+      background: url('kit-hero.png') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+    .kit-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    body.dark .kit-hero::after {
+      background: rgba(0,0,0,0.7);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      text-align: center;
+      padding: 0 20px;
+      animation: fadeUp 0.8s ease;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .kit-hero h1 {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 10px;
+    }
+    .kit-hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    .quick-cats {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .quick-cat {
+      padding: 10px 22px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(6px);
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .quick-cat:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Progress bar */
+    .progress-bar { display:flex; justify-content:center; gap:8px; margin:30px 0 20px; flex-wrap:wrap; }
+    .progress-step { display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; padding:8px 16px; border-radius:20px; background:var(--surface); opacity:0.5; transition:0.3s; }
+    .progress-step.done { opacity:1; background:#e8f5e9; color:#22c55e; }
+    body.dark .progress-step.done { background:#1a3a1a; }
+    .progress-step.active { opacity:1; background:var(--step-active, #111); color:var(--bg); }
+
+    /* Workspace */
+    .workspace { display:flex; gap:24px; margin:20px 0 40px; }
+    @media (max-width:1024px) { .workspace { flex-direction:column; } }
+    .panel-left { flex:1; min-width:280px; }
+    .panel-center { flex:1; min-width:280px; display:flex; align-items:center; justify-content:center; }
+    .panel-right { flex:0 0 300px; }
+    @media (max-width:1024px) { .panel-right { flex:0 0 auto; } }
+
+    /* Steps */
+    .step-accordion { background:var(--card-bg); border-radius:18px; border:1px solid var(--border); overflow:hidden; margin-bottom:16px; box-shadow:var(--shadow-sm); }
+    .step-header { padding:16px 20px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:0.2s; font-size:1rem; }
+    .step-header:hover { background:var(--surface); }
+    .step-header .step-num { width:30px; height:30px; border-radius:50%; background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:0.85rem; }
+    .step-header.done .step-num { background:#22c55e; color:white; }
+    .step-body { padding:0 20px 20px; display:none; }
+    .step-body.open { display:block; }
+    .product-pick-card { display:flex; gap:14px; padding:14px; border:1px solid var(--border); border-radius:14px; margin-bottom:10px; cursor:pointer; transition:0.2s; align-items:center; background:var(--surface); }
+    .product-pick-card:hover { border-color:var(--accent); box-shadow:var(--shadow-sm); }
+    .product-pick-card.selected { border-color:var(--accent); background:rgba(211,47,47,0.05); }
+    .product-pick-card img { width:70px; height:70px; object-fit:cover; border-radius:10px; }
+    .size-options { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+    .size-opt { padding:6px 12px; border:1px solid var(--border); border-radius:6px; font-size:0.8rem; cursor:pointer; transition:0.2s; font-weight:600; }
+    .size-opt.selected { background:var(--accent); color:white; border-color:var(--accent); }
+
+    /* Preview */
+    .preview-stage { background:var(--preview-bg); border-radius:24px; padding:30px; text-align:center; width:100%; min-height:400px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+    .preview-item { width:180px; height:180px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.5); padding:10px; transition:0.3s; }
+    body.dark .preview-item { background:rgba(255,255,255,0.05); }
+    .preview-connector { width:2px; height:20px; background:var(--border); }
+    .preview-empty { color:#999; font-size:0.9rem; }
+
+    /* Summary */
+    .kit-summary { background:var(--card-bg); border-radius:20px; padding:24px; border:1px solid var(--border); box-shadow:var(--shadow-md); position:sticky; top:100px; }
+    .kit-summary h3 { margin-bottom:16px; font-size:1.2rem; }
+    .kit-summary-item { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); }
+    .kit-summary-item .remove-kit { color:var(--accent); cursor:pointer; font-size:0.85rem; font-weight:600; }
+    .kit-total-row { display:flex; justify-content:space-between; margin-top:12px; font-weight:700; }
+    .kit-discount { color:#22c55e; }
+
+    .btn { padding:14px 24px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border:none; border-radius:12px; cursor:pointer; transition:0.3s; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.9rem; margin-top:10px; }
+    .btn-primary { background:var(--accent); color:white; }
+    .btn-primary:hover { background:var(--accent-hover); transform:translateY(-2px); }
+    .btn-outline { background:transparent; border:2px solid var(--text); color:var(--text); }
+    .btn-outline:hover { background:var(--text); color:var(--bg); }
+
+    .floating-kit { position:fixed; top:90px; right:20px; background:var(--accent); color:white; border-radius:30px; padding:12px 20px; font-weight:700; z-index:50; box-shadow:0 8px 20px rgba(211,47,47,0.3); cursor:pointer; display:none; align-items:center; gap:8px; transition:0.3s; }
+    .floating-kit.visible { display:flex; }
+
+    .section-title { font-size:1.8rem; font-weight:800; margin-bottom:20px; }
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:20px; }
+    .info-card { background:var(--surface); border-radius:16px; padding:24px; text-align:center; transition:0.3s; }
+    .info-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); }
+    .info-card i { font-size:1.8rem; color:var(--accent); margin-bottom:10px; }
+
+    .faq-item { border-bottom:1px solid var(--border); padding:16px 0; cursor:pointer; }
+    .faq-q { font-weight:700; display:flex; justify-content:space-between; }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height 0.3s; opacity:0.8; }
+    .faq-a.open { max-height:200px; margin-top:10px; }
+
+    .team-cta { background:var(--surface); border-radius:24px; padding:40px; text-align:center; margin:40px 0; }
+
+    footer { background:#111; color:#bbb; padding:40px 0 30px; margin-top:60px; text-align:center; }
+    body.dark footer { background:#000; }
+    .footer-logo { height:50px; filter:invert(1); }
+
+    .notification { position:fixed; top:20px; right:20px; background:var(--accent); color:white; padding:16px 28px; border-radius:12px; z-index:1000; font-weight:600; display:none; animation:slideIn 0.3s ease; }
+    @keyframes slideIn { from{transform:translateX(120%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html" class="active">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <div class="floating-kit" id="floatingKit">
+    <i class="fas fa-cube"></i> KIT (<span id="floatCount">0</span>) ₹<span id="floatTotal">0</span>
+  </div>
+
+  <div class="container">
+    <!-- Hero with proper overlay and visible text -->
+    <div class="kit-hero">
+      <div class="hero-content">
+        
+        <h1>BUILD YOUR KIT</h1>
+        <p>Create your complete FalconSports outfit from our premium collection.</p>
+      </div>
+    </div>
+
+    <div class="progress-bar" id="progressBar">
+      <span class="progress-step" id="prog1">STEP 1</span>
+      <span class="progress-step" id="prog2">STEP 2</span>
+      <span class="progress-step" id="prog3">STEP 3</span>
+      <span class="progress-step" id="progDone">✓ READY</span>
+    </div>
+
+    <div class="workspace">
+      <div class="panel-left" id="selectionPanel"></div>
+      <div class="panel-center">
+        <div class="preview-stage" id="previewStage">
+          <p class="preview-empty">Select products to preview your kit</p>
+        </div>
+      </div>
+      <div class="panel-right">
+        <div class="kit-summary" id="kitSummary">
+          <h3><i class="fas fa-cube"></i> YOUR KIT</h3>
+          <div id="summaryItems"><p style="color:#999;">No items selected</p></div>
+          <div class="kit-total-row" style="margin-top:16px;"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+          <div class="kit-total-row kit-discount" id="discountRow" style="display:none;"><span>Kit Discount</span><span id="discountAmt">-₹0</span></div>
+          <div class="kit-total-row" style="font-size:1.3rem; margin-top:8px;"><span>Total</span><span id="grandTotal" style="color:var(--accent);">₹0</span></div>
+          <button class="btn btn-primary" onclick="addFullKitToCart()"><i class="fas fa-shopping-cart"></i> ADD FULL KIT TO CART</button>
+          <button class="btn btn-outline" onclick="saveKit()"><i class="far fa-bookmark"></i> SAVE KIT</button>
+        </div>
+      </div>
+    </div>
+
+    <section style="margin:40px 0;">
+      <h2 class="section-title">Complete Your Kit</h2>
+      <div class="card-grid" id="recommendations"></div>
+    </section>
+
+    <section style="margin:40px 0;">
+      <h2 class="section-title">Why Build a Kit?</h2>
+      <div class="card-grid">
+        <div class="info-card"><i class="fas fa-gem"></i><h3>Premium Materials</h3><p>Top-quality fabrics.</p></div>
+        <div class="info-card"><i class="fas fa-running"></i><h3>Athletic Fit</h3><p>Designed for movement.</p></div>
+        <div class="info-card"><i class="fas fa-shipping-fast"></i><h3>Fast Delivery</h3><p>Ships in 24 hours.</p></div>
+        <div class="info-card"><i class="fas fa-undo"></i><h3>Easy Returns</h3><p>Hassle-free exchange.</p></div>
+      </div>
+    </section>
+
+    <div class="team-cta">
+      <h2 style="font-size:1.8rem; font-weight:800;">Need Kits for a Team?</h2>
+      <p style="margin:10px 0 20px;">Schools · Clubs · Academies · Corporate Events</p>
+      <a href="contact.html" class="btn btn-primary" style="width:auto; display:inline-flex;">REQUEST TEAM QUOTE</a>
+    </div>
+
+    <section style="margin:40px 0;">
+      <h2 class="section-title">FAQ</h2>
+      <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">How does Kit Builder work? <i class="fas fa-chevron-down"></i></div><div class="faq-a">Select a T-Shirt, Bottom, and Shoes from our collection. Choose sizes, preview your kit, and add everything to cart in one click.</div></div>
+      <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">Can I mix colors? <i class="fas fa-chevron-down"></i></div><div class="faq-a">Yes! You can choose different colors for each item in your kit.</div></div>
+      <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">Is there a discount for buying a full kit? <i class="fas fa-chevron-down"></i></div><div class="faq-a">Yes! When you buy a complete kit (T-Shirt + Bottom + Shoes), you get an automatic discount.</div></div>
+      <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">Can I save my kit for later? <i class="fas fa-chevron-down"></i></div><div class="faq-a">Absolutely. Your kit is auto-saved and will be here when you return.</div></div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container" style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+      <img src="falcon-stacked.png" alt="FalconSports" class="footer-logo">
+      <div>© 2026 FalconSports. Premium Sportswear.</div>
+    </div>
+  </footer>
+
+  <!-- PAGE‑SPECIFIC SCRIPT (no duplicates) -->
+  <script>
+    (function() {
+      const API_URL = 'http://localhost:5000/api';
+      let allProducts = [];
+      const discountPercent = 10;
+      let kit = JSON.parse(localStorage.getItem('falconKit')) || [];
+
+      async function loadProducts() {
+        try {
+          const res = await fetch(`${API_URL}/products`);
+          allProducts = await res.json();
+          renderAll();
+        } catch (err) { console.error('Failed to load products:', err); }
+      }
+
+      function saveKitState() {
+        localStorage.setItem('falconKit', JSON.stringify(kit));
+        renderAll();
+      }
+
+      function getImage(p) { return (p.images && p.images.length) ? p.images[0] : 'https://placehold.co/200x200/1a1a1a/white?text=Falcon'; }
+      function getPrice(p) { return p.salePrice || p.price; }
+      function getTShirts() { return allProducts.filter(p => p.category && (p.category.toLowerCase().includes('t-shirt') || p.category.toLowerCase().includes('tee'))); }
+      function getBottoms() { return allProducts.filter(p => p.category && (p.category.toLowerCase().includes('track pant') || p.category.toLowerCase().includes('short') || p.category.toLowerCase().includes('pant'))); }
+      function getShoes() { return allProducts.filter(p => p.category && p.category.toLowerCase().includes('shoe')); }
+      function getKitItem(type) { return kit.find(i => i.type === type); }
+
+      function renderSelection() {
+        const panel = document.getElementById('selectionPanel');
+        const tshirts = getTShirts();
+        const bottoms = getBottoms();
+        const shoes = getShoes();
+        const selectedTshirt = getKitItem('tshirt');
+        const selectedBottom = getKitItem('bottom');
+        const selectedShoes = getKitItem('shoes');
+
+        panel.innerHTML = `
+          <div class="step-accordion" id="step1">
+            <div class="step-header ${selectedTshirt?'done':''}" onclick="toggleStep('step1')">
+              <span><span class="step-num">1</span> SELECT T-SHIRT</span>
+              <span>${selectedTshirt ? '✓ ' + selectedTshirt.name : ''}</span>
+            </div>
+            <div class="step-body ${!selectedTshirt?'open':''}">
+              ${tshirts.map(p => {
+                const price = getPrice(p);
+                const isSelected = selectedTshirt && selectedTshirt.productId === p._id;
+                return `
+                <div class="product-pick-card ${isSelected?'selected':''}" id="pick-${p._id}">
+                  <img src="${getImage(p)}" alt="${p.name}">
+                  <div style="flex:1;"><strong>${p.name}</strong><br>₹${price}
+                    <div class="size-options">
+                      ${(p.sizes||[]).map(s => `<span class="size-opt ${isSelected && selectedTshirt.size===s.size?'selected':''}" onclick="event.stopPropagation();selectKitProduct('${p._id}','tshirt','${s.size}')">${s.size}</span>`).join('')}
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" style="width:auto; padding:8px 16px; font-size:0.8rem;" onclick="event.stopPropagation();selectKitProduct('${p._id}','tshirt','${(p.sizes&&p.sizes[0])?p.sizes[0].size:'M'}')">ADD</button>
+                </div>`;
+              }).join('')}
+              ${tshirts.length === 0 ? '<p style="color:#999;">No T-Shirts available.</p>' : ''}
+            </div>
+          </div>
+          <div class="step-accordion" id="step2">
+            <div class="step-header ${selectedBottom?'done':''}" onclick="toggleStep('step2')">
+              <span><span class="step-num">2</span> SELECT BOTTOM</span>
+              <span>${selectedBottom ? '✓ ' + selectedBottom.name : ''}</span>
+            </div>
+            <div class="step-body ${!selectedBottom?'open':''}">
+              <p style="font-weight:600; margin-bottom:10px;">Track Pants & Shorts</p>
+              ${bottoms.map(p => {
+                const price = getPrice(p);
+                const isSelected = selectedBottom && selectedBottom.productId === p._id;
+                return `
+                <div class="product-pick-card ${isSelected?'selected':''}" id="pick-${p._id}">
+                  <img src="${getImage(p)}" alt="${p.name}">
+                  <div style="flex:1;"><strong>${p.name}</strong><br>₹${price}
+                    <div class="size-options">
+                      ${(p.sizes||[]).map(s => `<span class="size-opt ${isSelected && selectedBottom.size===s.size?'selected':''}" onclick="event.stopPropagation();selectKitProduct('${p._id}','bottom','${s.size}')">${s.size}</span>`).join('')}
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" style="width:auto; padding:8px 16px; font-size:0.8rem;" onclick="event.stopPropagation();selectKitProduct('${p._id}','bottom','${(p.sizes&&p.sizes[0])?p.sizes[0].size:'M'}')">ADD</button>
+                </div>`;
+              }).join('')}
+              ${bottoms.length === 0 ? '<p style="color:#999;">No bottoms available.</p>' : ''}
+            </div>
+          </div>
+          <div class="step-accordion" id="step3">
+            <div class="step-header ${selectedShoes?'done':''}" onclick="toggleStep('step3')">
+              <span><span class="step-num">3</span> SELECT SHOES</span>
+              <span>${selectedShoes ? '✓ ' + selectedShoes.name : ''}</span>
+            </div>
+            <div class="step-body ${!selectedShoes?'open':''}">
+              ${shoes.map(p => {
+                const price = getPrice(p);
+                const isSelected = selectedShoes && selectedShoes.productId === p._id;
+                return `
+                <div class="product-pick-card ${isSelected?'selected':''}" id="pick-${p._id}">
+                  <img src="${getImage(p)}" alt="${p.name}">
+                  <div style="flex:1;"><strong>${p.name}</strong><br>₹${price}
+                    <div class="size-options">
+                      ${(p.sizes||[]).map(s => `<span class="size-opt ${isSelected && selectedShoes.size===s.size?'selected':''}" onclick="event.stopPropagation();selectKitProduct('${p._id}','shoes','${s.size}')">${s.size}</span>`).join('')}
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" style="width:auto; padding:8px 16px; font-size:0.8rem;" onclick="event.stopPropagation();selectKitProduct('${p._id}','shoes','${(p.sizes&&p.sizes[0])?p.sizes[0].size:'7'}')">ADD</button>
+                </div>`;
+              }).join('')}
+              ${shoes.length === 0 ? '<p style="color:#999;">No shoes available.</p>' : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      window.toggleStep = function(id) {
+        const body = document.querySelector(`#${id} .step-body`);
+        if (body) body.classList.toggle('open');
+      };
+
+      window.selectKitProduct = function(productId, type, size) {
+        const product = allProducts.find(p => p._id === productId);
+        if (!product) return;
+        kit = kit.filter(i => i.type !== type);
+        kit.push({
+          productId: product._id,
+          name: product.name,
+          price: getPrice(product),
+          type: type,
+          size: size,
+          image: getImage(product),
+          kitId: Date.now()
+        });
+        saveKitState();
+        showNotification(`${product.name} added to kit!`);
+      };
+
+      window.removeKitItem = function(kitId) {
+        kit = kit.filter(i => i.kitId !== kitId);
+        saveKitState();
+        showNotification('Item removed from kit');
+      };
+
+      function renderPreview() {
+        const stage = document.getElementById('previewStage');
+        const tshirt = getKitItem('tshirt');
+        const bottom = getKitItem('bottom');
+        const shoes = getKitItem('shoes');
+        if (!tshirt && !bottom && !shoes) {
+          stage.innerHTML = '<p class="preview-empty">Select products to preview your kit</p>';
+          return;
+        }
+        stage.innerHTML = `
+          ${tshirt ? `<img src="${tshirt.image}" class="preview-item" alt="${tshirt.name}" style="width:160px; height:160px;"><span style="font-size:0.8rem;">${tshirt.name} (${tshirt.size})</span>` : '<div class="preview-item" style="background:transparent; border:2px dashed var(--border); display:flex; align-items:center; justify-content:center;">T-Shirt</div>'}
+          <div class="preview-connector"></div>
+          ${bottom ? `<img src="${bottom.image}" class="preview-item" alt="${bottom.name}" style="width:160px; height:160px;"><span style="font-size:0.8rem;">${bottom.name} (${bottom.size})</span>` : '<div class="preview-item" style="background:transparent; border:2px dashed var(--border); display:flex; align-items:center; justify-content:center;">Bottom</div>'}
+          <div class="preview-connector"></div>
+          ${shoes ? `<img src="${shoes.image}" class="preview-item" alt="${shoes.name}" style="width:160px; height:120px;"><span style="font-size:0.8rem;">${shoes.name} (${shoes.size})</span>` : '<div class="preview-item" style="background:transparent; border:2px dashed var(--border); display:flex; align-items:center; justify-content:center; height:100px;">Shoes</div>'}
+        `;
+      }
+
+      function renderSummary() {
+        const container = document.getElementById('summaryItems');
+        const subtotalEl = document.getElementById('subtotal');
+        const discountRow = document.getElementById('discountRow');
+        const discountAmt = document.getElementById('discountAmt');
+        const grandTotal = document.getElementById('grandTotal');
+        const subtotal = kit.reduce((s,i) => s + i.price, 0);
+        const hasAllThree = getKitItem('tshirt') && getKitItem('bottom') && getKitItem('shoes');
+        const discount = hasAllThree ? Math.round(subtotal * discountPercent / 100) : 0;
+        const total = subtotal - discount;
+
+        if (kit.length === 0) {
+          container.innerHTML = '<p style="color:#999;">No items selected</p>';
+        } else {
+          container.innerHTML = kit.map(i => `
+            <div class="kit-summary-item">
+              <span>${i.name} <small>(${i.size})</small></span>
+              <span>₹${i.price} <span class="remove-kit" onclick="removeKitItem(${i.kitId})">✕</span></span>
+            </div>
+          `).join('');
+        }
+        subtotalEl.textContent = '₹' + subtotal;
+        if (hasAllThree && discount > 0) {
+          discountRow.style.display = 'flex';
+          discountAmt.textContent = '-₹' + discount;
+        } else {
+          discountRow.style.display = 'none';
+        }
+        grandTotal.textContent = '₹' + total;
+        updateFloatingCounter();
+        updateProgress();
+      }
+
+      function updateFloatingCounter() {
+        const float = document.getElementById('floatingKit');
+        const count = kit.length;
+        const total = kit.reduce((s,i) => s + i.price, 0);
+        document.getElementById('floatCount').textContent = count;
+        document.getElementById('floatTotal').textContent = total;
+        float.classList.toggle('visible', count > 0);
+      }
+
+      function updateProgress() {
+        const p1 = document.getElementById('prog1');
+        const p2 = document.getElementById('prog2');
+        const p3 = document.getElementById('prog3');
+        const pDone = document.getElementById('progDone');
+        p1.classList.toggle('done', !!getKitItem('tshirt'));
+        p2.classList.toggle('done', !!getKitItem('bottom'));
+        p3.classList.toggle('done', !!getKitItem('shoes'));
+        const allDone = getKitItem('tshirt') && getKitItem('bottom') && getKitItem('shoes');
+        pDone.classList.toggle('done', allDone);
+        pDone.classList.toggle('active', allDone);
+      }
+
+      function renderRecommendations() {
+        const grid = document.getElementById('recommendations');
+        const recs = allProducts.filter(p => !kit.find(i => i.productId === p._id)).slice(0, 4);
+        grid.innerHTML = recs.map(p => `
+          <div class="info-card" style="cursor:pointer;" onclick="addRecToKit('${p._id}')">
+            <img src="${getImage(p)}" style="width:100%; height:160px; object-fit:cover; border-radius:12px;" alt="${p.name}">
+            <h3 style="margin-top:10px;">${p.name}</h3>
+            <p style="color:var(--accent); font-weight:700;">₹${getPrice(p)}</p>
+            <button class="btn btn-outline" style="width:auto; padding:8px 16px; margin-top:8px;">Add to Kit</button>
+          </div>
+        `).join('') || '<p style="color:#999;">Add more products in the admin panel.</p>';
+      }
+
+      window.addRecToKit = function(productId) {
+        const p = allProducts.find(x => x._id === productId);
+        if (!p) return;
+        const cat = (p.category || '').toLowerCase();
+        let type = 'general';
+        if (cat.includes('t-shirt') || cat.includes('tee')) type = 'tshirt';
+        else if (cat.includes('pant') || cat.includes('short')) type = 'bottom';
+        else if (cat.includes('shoe')) type = 'shoes';
+        selectKitProduct(productId, type, (p.sizes && p.sizes[0]) ? p.sizes[0].size : 'M');
+      };
+
+      window.addFullKitToCart = function() {
+        if (kit.length === 0) return showNotification('Add items to your kit first!');
+        let cart = JSON.parse(localStorage.getItem('falconCart')) || [];
+        kit.forEach(i => cart.push({ name: i.name + ' (' + i.size + ')', price: i.price, id: Date.now() }));
+        localStorage.setItem('falconCart', JSON.stringify(cart));
+        kit = [];
+        saveKitState();
+        showNotification('Full kit added to cart! 🎉');
+        window.location.href = 'cart.html';
+      };
+
+      window.saveKit = function() {
+        saveKitState();
+        showNotification('Kit saved!');
+      };
+
+      window.scrollToStep = function(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          const body = el.querySelector('.step-body');
+          if (body && !body.classList.contains('open')) body.classList.add('open');
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      window.toggleFAQ = function(el) {
+        const answer = el.querySelector('.faq-a');
+        answer.classList.toggle('open');
+      };
+
+      function renderAll() {
+        renderSelection();
+        renderPreview();
+        renderSummary();
+        renderRecommendations();
+      }
+
+      loadProducts();
+    })();
+  </script>
+  <!-- GLOBAL SHARED JS (theme, menu, cart, kit, notifications) -->
+  <script src="main.js"></script>
+</body>
+</html>

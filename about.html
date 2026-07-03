@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>About FalconSports | Premium Sportswear Brand</title>
+  <meta name="description" content="FalconSports – Built for athletes. Designed for performance. Discover our story, mission, and the unique Kit Builder experience.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    /* Page‑specific overrides */
+    section { padding: 80px 0; }
+
+    .hero-about {
+      position: relative;
+      height: 150vh;
+      min-height: 500px;
+      background-color: #fafafa;
+      background: url('about-hero.png') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    body.dark .hero-about { background-color: #0a0a0a; }
+
+    .hero-wing {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%; height: 120%;
+      opacity: 0.05;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-wing svg { width: 100%; height: 100%; object-fit: contain; }
+    .hero-wing svg path { fill: currentColor; color: #000; }
+    body.dark .hero-wing svg path { color: #fff; }
+
+    .hero-mountains {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 30%;
+      z-index: 2; pointer-events: none; opacity: 0.1;
+    }
+    .hero-mountains svg { width: 100%; height: 100%; preserveAspectRatio: none; }
+    .hero-mountains svg polygon { fill: #000; }
+    body.dark .hero-mountains svg polygon { fill: #fff; }
+
+    .hero-lines { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .gold-line { position: absolute; background: rgba(201,168,76,0.25); }
+    .line-top-left { top: 0; left: 0; width: 150px; height: 1px; }
+    .line-top-left::after { content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 80px; background: inherit; }
+    .line-bottom-right { bottom: 0; right: 0; width: 150px; height: 1px; }
+    .line-bottom-right::after { content: ''; position: absolute; right: 0; bottom: 0; width: 1px; height: 80px; background: inherit; }
+
+    .hero-about::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 4;
+    }
+    body.dark .hero-about::after { background: rgba(0,0,0,0.6); }
+    .hero-content { position: relative; z-index: 5; color: #fff; }
+    .hero-about h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; }
+    .hero-about p { font-size: 1.2rem; margin-top: 20px; font-weight: 500; opacity: 0.95; }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      letter-spacing: -1px;
+      text-align: center;          /* ✅ ensure centered */
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+    .about-image { border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-md); }
+    .about-image img { width: 100%; height: auto; display: block; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 30px; }
+    .about-card {
+      background: var(--card-bg); border-radius: 20px; padding: 30px; transition: 0.3s;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      text-align: center;          /* ✅ card content centered */
+    }
+    .about-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .about-card i { font-size: 2rem; color: var(--accent); margin-bottom: 16px; }
+    .about-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+
+    .kit-flow { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin: 40px 0; }
+    .flow-step {
+      text-align: center; flex: 1; min-width: 150px; padding: 20px;
+      background: var(--surface); border-radius: 18px; transition: 0.3s;
+    }
+    .flow-step:hover { background: var(--accent); color: white; }
+    .flow-step i { font-size: 2rem; margin-bottom: 10px; }
+
+    .cta-section {
+      background: #111; color: #fff; text-align: center; padding: 80px 0;
+      border-radius: 0; margin-top: 60px;
+    }
+    body.dark .cta-section { background: #1a1a1a; }
+    .cta-section h2 { font-size: 2.5rem; font-weight: 800; }
+    .cta-section .btn-group { margin-top: 30px; display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      padding: 14px 34px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      text-decoration: none; background: var(--btn-bg); color: var(--btn-text);
+      font-size: 0.9rem;
+    }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-accent:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 2px solid white; color: white; }
+    .btn-outline:hover { background: white; color: #000; }
+
+    footer {
+      background: #111; color: #bbb; padding: 40px 0 30px; text-align: center;
+    }
+    body.dark footer { background: #000; }
+    .footer-logo { height: 50px; filter: invert(1); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html" class="active">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-about">
+    <div class="hero-wing">
+      <svg viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
+        <path d="M900,100 C700,0 300,50 100,300 C50,450 80,600 200,650 C300,690 450,550 500,400 C550,550 700,690 800,650 C920,600 950,450 900,300 C850,150 800,100 900,100 Z" />
+      </svg>
+    </div>
+    <div class="hero-mountains">
+      <svg viewBox="0 0 1000 300" preserveAspectRatio="none">
+        <polygon points="0,300 200,50 400,200 600,20 800,180 1000,60 1000,300" />
+      </svg>
+    </div>
+    <div class="hero-lines">
+      <div class="gold-line line-top-left"></div>
+      <div class="gold-line line-bottom-right"></div>
+    </div>
+    <div class="hero-content">
+      <h1 id="aboutHeroTitle">ABOUT FALCONSPORTS</h1>
+      <p id="aboutHeroSubtitle">Built For Athletes. Designed For Performance.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Our Story -->
+    <section>
+      <div class="grid-2">
+        <div class="about-image">
+          <img src="train.png">
+        </div>
+        <div>
+          <h2 class="section-title">Our Story</h2>
+          <p style="font-size:1.1rem; line-height:1.7; opacity:0.9; text-align: center;">
+            FalconSports was created with a simple vision: to deliver premium sportswear that combines performance, comfort and modern design. We believe athletes deserve gear that looks great, performs under pressure and supports every stage of training and competition.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission -->
+    <section>
+      <h2 class="section-title">Our Mission</h2>
+      <p style="font-size:1.2rem; max-width:700px; margin:0 auto 40px; text-align: center;">
+        To create premium sportswear that helps athletes train harder, perform better and feel confident every day.
+      </p>
+      <div class="card-grid">
+        <div class="about-card"><i class="fas fa-bolt"></i><h3>Performance</h3><p>Engineered for peak output.</p></div>
+        <div class="about-card"><i class="fas fa-star"></i><h3>Quality</h3><p>Premium materials, built to last.</p></div>
+        <div class="about-card"><i class="fas fa-lightbulb"></i><h3>Innovation</h3><p>Constantly improving design.</p></div>
+        <div class="about-card"><i class="fas fa-heart"></i><h3>Comfort</h3><p>All-day wearability.</p></div>
+      </div>
+    </section>
+
+    <!-- Why FalconSports -->
+    <section>
+      <h2 class="section-title">Why FalconSports</h2>
+      <div class="card-grid">
+        <div class="about-card"><i class="fas fa-tshirt"></i><h3>Premium Fabrics</h3><p>Breathable, lightweight materials.</p></div>
+        <div class="about-card"><i class="fas fa-running"></i><h3>Athlete Focused</h3><p>Designed for movement.</p></div>
+        <div class="about-card"><i class="fas fa-shield-alt"></i><h3>Built To Last</h3><p>Durable stitching and quality.</p></div>
+        <div class="about-card"><i class="fas fa-paint-brush"></i><h3>Modern Design</h3><p>Clean, professional aesthetics.</p></div>
+      </div>
+    </section>
+
+    <!-- Product Philosophy -->
+    <section>
+      <h2 class="section-title">Designed For Performance</h2>
+      <p style="font-size:1.1rem; max-width:700px; margin:0 auto; text-align: center; opacity:0.9;">
+        Every FalconSports product is created with attention to fit, comfort and durability. From training sessions to match day, our goal is to provide gear that performs as hard as you do.
+      </p>
+    </section>
+
+    <!-- The Kit Builder (USP) -->
+    <section>
+      <h2 class="section-title">Build Your Complete Kit</h2>
+      <p style="font-size:1.1rem; max-width:700px; margin:0 auto 40px; text-align: center; opacity:0.9;">
+        FalconSports introduces a unique Kit Builder experience that allows customers to create their own sports outfit from our collection. Choose your T-Shirt, Track Pant, Shorts and Shoes to build a complete performance kit.
+      </p>
+      <div class="kit-flow">
+        <div class="flow-step"><i class="fas fa-mouse-pointer"></i><h3>Choose Product</h3></div>
+        <div class="flow-step"><i class="fas fa-cubes"></i><h3>Build Kit</h3></div>
+        <div class="flow-step"><i class="fas fa-shopping-cart"></i><h3>Add To Cart</h3></div>
+      </div>
+      <div style="text-align:center; margin-top:30px;">
+        <a href="kitbuilder.html" class="btn btn-accent"><i class="fas fa-puzzle-piece"></i> Try Kit Builder</a>
+      </div>
+    </section>
+
+    <!-- Core Values -->
+    <section>
+      <h2 class="section-title">Our Core Values</h2>
+      <div class="card-grid">
+        <div class="about-card"><i class="fas fa-trophy"></i><h3>Performance</h3><p>We design for athletes.</p></div>
+        <div class="about-card"><i class="fas fa-gem"></i><h3>Quality</h3><p>We never compromise on materials.</p></div>
+        <div class="about-card"><i class="fas fa-rocket"></i><h3>Innovation</h3><p>We constantly improve our products.</p></div>
+        <div class="about-card"><i class="fas fa-users"></i><h3>Community</h3><p>We support active lifestyles.</p></div>
+      </div>
+    </section>
+
+    <!-- Future Vision -->
+    <section>
+      <h2 class="section-title">The Future of FalconSports</h2>
+      <p style="font-size:1.1rem; max-width:800px; margin:0 auto; text-align: center; opacity:0.9;">
+        Our vision is to become a trusted sportswear brand known for quality products, innovative experiences and a commitment to athletes. We aim to expand our collections, improve our Kit Builder platform and continue delivering premium sportswear to customers everywhere.
+      </p>
+    </section>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="container">
+      <h2>Ready to Elevate Your Game?</h2>
+      <div class="btn-group">
+        <a href="collection.html" class="btn btn-accent"><i class="fas fa-tshirt"></i> Shop Collection</a>
+        <a href="kitbuilder.html" class="btn btn-outline"><i class="fas fa-puzzle-piece"></i> Build Your Kit</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container" style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+      <img src="falcon-stacked.png" alt="FalconSports" class="footer-logo">
+      <div>© 2026 FalconSports. Premium Sportswear.</div>
+    </div>
+  </footer>
+
+  <!-- GLOBAL SHARED JS (theme, menu) -->
+  <script src="main.js"></script>
+  <!-- Page‑specific JS (scroll reveal + dynamic content) -->
+  <script>
+    // Dynamic content from admin
+    const content = JSON.parse(localStorage.getItem('falconContent'));
+    if (content) {
+      if (content.aboutHeroTitle) document.getElementById('aboutHeroTitle').textContent = content.aboutHeroTitle;
+      if (content.aboutHeroSubtitle) document.getElementById('aboutHeroSubtitle').textContent = content.aboutHeroSubtitle;
+    }
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    if (revealElements.length) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.15 });
+      revealElements.forEach(el => observer.observe(el));
+    }
+  </script>
+</body>
+</html>

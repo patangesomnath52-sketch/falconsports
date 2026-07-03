@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Premium Sportswear & Custom Kit Builder</title>
+  <meta name="description" content="FalconSports – Build your complete sports kit. Premium sportswear designed for athletes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    :root {
+      --bg: #ffffff; --text: #0a0a0a; --surface: #f5f5f5; --border: #e0e0e0;
+      --accent: #d32f2f; --accent-hover: #b71c1c; --gold: #c9a84c;
+      --header-bg: rgba(255,255,255,0.85); --shadow: 0 8px 30px rgba(0,0,0,0.05);
+      --card-bg: #ffffff; --btn-text: #ffffff; --btn-bg: #0a0a0a;
+      /* Hero images – replace with your own */
+      --hero-bg-image: url('hero.png');
+      --hero-overlay-bg: rgba(0,0,0,0.4);
+      --footer-bg: #f5f5f5; --footer-text: #333; --footer-heading: #111;
+    }
+    body.dark {
+      --bg: #0a0a0a; --text: #f0f0f0; --surface: #141414; --border: #2a2a2a;
+      --header-bg: rgba(10,10,10,0.85); --shadow: 0 8px 30px rgba(0,0,0,0.5);
+      --card-bg: #1a1a1a; --btn-bg: #f0f0f0; --btn-text: #0a0a0a;
+      --hero-bg-image: url('hero.png');
+      --hero-overlay-bg: rgba(0,0,0,0.55);
+      --footer-bg: #111111; --footer-text: #bbbbbb; --footer-heading: #ffffff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
+      transition: background 0.4s ease, color 0.4s ease; line-height: 1.5;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    .container { max-width:1280px; margin:0 auto; padding:0 20px; }
+
+    /* Header */
+    header {
+      position: sticky; top:0; z-index:60; background: var(--header-bg);
+      backdrop-filter: blur(20px); border-bottom:1px solid var(--border);
+    }
+    .navbar { display:flex; align-items:center; justify-content:space-between; padding:12px 0; }
+    .logo { display:flex; align-items:center; text-decoration:none; }
+    .nav-logo { height:28px; transition:0.3s; filter:brightness(0) invert(0); }
+    body.dark .nav-logo { filter:brightness(0) invert(1); }
+    .nav-links { display:flex; gap:24px; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; }
+    .nav-links a { text-decoration:none; color:var(--text); transition:0.2s; padding:4px 0; }
+    .nav-links a:hover { color:var(--accent); }
+    .header-actions { display:flex; gap:16px; align-items:center; }
+    .header-actions i { font-size:1.2rem; cursor:pointer; color:var(--text); transition:0.2s; }
+    .header-actions i:hover { color:var(--accent); }
+    .theme-btn { background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text); }
+    /* Mobile menu */
+    .hamburger { display:none; font-size:1.5rem; cursor:pointer; color:var(--text); }
+    .mobile-menu {
+      position:fixed; top:0; right:-100%; width:280px; max-width:80%; height:100%;
+      background:var(--bg); z-index:200; padding:24px; transition:right 0.3s; box-shadow:-5px 0 20px rgba(0,0,0,0.1);
+      display:flex; flex-direction:column; gap:20px;
+    }
+    .mobile-menu.open { right:0; }
+    .mobile-menu a { font-size:1.1rem; font-weight:600; text-decoration:none; color:var(--text); }
+    .mobile-menu-close { align-self:flex-end; font-size:1.5rem; cursor:pointer; }
+    .menu-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:199; display:none; }
+    .menu-overlay.show { display:block; }
+
+    @media (max-width: 768px) {
+      .nav-links { display:none; }
+      .hamburger { display:block; }
+    }
+
+    /* Buttons */
+    .btn {
+      padding:12px 28px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+      border:none; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+      text-decoration:none; background:var(--btn-bg); color:var(--btn-text); font-size:0.85rem;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:0.25s;
+    }
+    .btn-accent { background:var(--accent); color:white; }
+    .btn-accent:hover { background:var(--accent-hover); }
+    .btn-outline { background:transparent; border:2px solid var(--text); color:var(--text); box-shadow:none; }
+
+    /* Hero – fully responsive with no cropping on mobile */
+    .hero {
+      position: relative;
+      height: 50vh;
+      min-height: 350px;
+      background: var(--hero-bg-image) center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    /* On small screens, fit the whole image without cropping */
+    @media (max-width: 600px) {
+      .hero {
+        height: auto;
+        min-height: 60vh;
+        background-size: contain;
+        background-position: center top;
+      }
+    }
+    .hero::after { content:''; position:absolute; inset:0; background:var(--hero-overlay-bg); z-index:1; }
+    .hero-content { position:relative; z-index:2; text-align:center; color:#fff; padding:0 20px; }
+    .hero-content h1 { font-size:clamp(2.5rem, 8vw, 4.5rem); font-weight:900; line-height:1.1; }
+    .hero-content p { font-size:1.2rem; margin:20px 0 30px; }
+    .btn-group { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+    @media (max-width: 480px) {
+      .hero { min-height:50vh; }
+      .hero-content h1 { font-size:2.2rem; }
+      .hero-content p { font-size:1rem; }
+    }
+
+    /* Sections */
+    section { padding:60px 0; }
+    .section-title { font-size:1.8rem; font-weight:800; margin-bottom:30px; text-align:center; }
+    .category-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px; }
+    .category-card {
+      background:var(--surface); border-radius:20px; padding:24px 12px; text-align:center;
+      font-weight:700; text-transform:uppercase; cursor:pointer; transition:0.3s; border:1px solid transparent; color:var(--text);
+    }
+    .category-card:hover { border-color:var(--accent); transform:translateY(-4px); }
+
+    /* Footer */
+    footer {
+      background:var(--footer-bg); color:var(--footer-text); padding:50px 0 20px; margin-top:60px;
+      transition:0.4s;
+    }
+    .footer-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:30px; text-align:center; }
+    .footer-grid h4 { color:var(--footer-heading); margin-bottom:12px; font-size:0.9rem; text-transform:uppercase; }
+    .footer-grid a { color:var(--footer-text); text-decoration:none; display:block; margin-bottom:6px; font-size:0.85rem; }
+    .footer-grid a:hover { color:var(--accent); }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns:1fr; gap:20px; }
+    }
+
+    .notification {
+      position:fixed; top:20px; right:20px; background:var(--accent); color:white;
+      padding:14px 24px; border-radius:12px; z-index:1000; font-weight:600;
+      display:none; animation:slideIn 0.3s ease;
+    }
+    @keyframes slideIn { from{transform:translateX(120%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+         <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+       
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>BUILT FOR<br>PERFORMANCE</h1>
+      <p>Premium Sportswear · Designed For Athletes</p>
+      <div class="btn-group">
+        <a href="collection.html" class="btn btn-accent">Shop Collection</a>
+        <a href="kitbuilder.html" class="btn btn-outline">Build Your Kit</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <section>
+      <h2 class="section-title">Why FalconSports</h2>
+      <div class="category-grid">
+        <div class="category-card"><i class="fas fa-gem"></i><br>Premium Quality</div>
+        <div class="category-card"><i class="fas fa-running"></i><br>Athlete Fit</div>
+        <div class="category-card"><i class="fas fa-shipping-fast"></i><br>Fast Shipping</div>
+        <div class="category-card"><i class="fas fa-cube"></i><br>Kit Builder</div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container footer-grid">
+      <div><h4>FalconSports</h4><p>Premium sportswear engineered for athletes.</p></div>
+      <div><h4>Shop</h4><a href="collection.html">Collection</a><a href="shoes.html">Shoes</a><a href="kitbuilder.html">Kit Builder</a><a href="about.html">About</a></div>
+      <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div style="text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid #333;">
+      <img src="falcon-stacked.png" alt="FalconSports" style="height:40px; filter:invert(1); margin-bottom:10px;">
+      <p>© 2026 FalconSports. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    if (localStorage.getItem('falconSportsTheme') === 'dark') {
+      body.classList.add('dark'); themeIcon.className = 'fas fa-sun';
+    }
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      const isDark = body.classList.contains('dark');
+      themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+      localStorage.setItem('falconSportsTheme', isDark ? 'dark' : 'light');
+    });
+
+    // Mobile menu
+    function openMobileMenu() {
+      document.getElementById('mobileMenu').classList.add('open');
+      document.getElementById('menuOverlay').classList.add('show');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('menuOverlay').classList.remove('show');
+    }
+  </script>
+  
+</body>
+</html>

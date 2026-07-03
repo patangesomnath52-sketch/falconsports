@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Checkout</title>
+  <meta name="description" content="FalconSports checkout – complete your order securely.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    .checkout-page { padding: 40px 0; }
+    .checkout-page h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; text-align: center; }
+    .checkout-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 30px; align-items: start; }
+    @media (max-width: 768px) { .checkout-layout { grid-template-columns: 1fr; } }
+    .shipping-form { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .shipping-form h2 { font-size: 1.4rem; margin-bottom: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .order-summary-checkout { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; position: sticky; top: 100px; }
+    .order-summary-checkout h2 { font-size: 1.4rem; margin-bottom: 20px; }
+    .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .summary-item.total { font-weight: 800; font-size: 1.2rem; border-bottom: none; }
+    .pay-btn { width: 100%; padding: 16px; margin-top: 20px; font-size: 1.1rem; }
+    .hidden { display: none !important; }
+    .payment-methods { margin: 20px 0; }
+    .payment-methods label { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+    .payment-methods input[type="radio"] { accent-color: var(--accent); width: 18px; height: 18px; }
+  </style>
+</head>
+<body>
+  <!-- HEADER (same as other pages) -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <i class="fas fa-search"></i>
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <div class="container checkout-page">
+    <h1>Checkout</h1>
+    <div class="checkout-layout">
+      <div class="shipping-form">
+        <h2>Shipping Information</h2>
+        <div class="form-row">
+          <div class="form-group"><label>Full Name</label><input type="text" id="fullName" placeholder="John Doe"></div>
+          <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="+91 9876543210"></div>
+        </div>
+        <div class="form-group"><label>Address</label><input type="text" id="address" placeholder="Street, colony"></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input type="text" id="city" placeholder="Mumbai"></div>
+          <div class="form-group"><label>State</label><input type="text" id="state" placeholder="Maharashtra"></div>
+        </div>
+        <div class="form-group"><label>Pincode</label><input type="text" id="pincode" placeholder="400001"></div>
+
+        <!-- Payment Method Selection -->
+        <div class="payment-methods">
+          <label>
+            <input type="radio" name="paymentMethod" value="razorpay" checked onchange="togglePaymentMethod()">
+            Pay Online (Razorpay)
+          </label>
+          <label>
+            <input type="radio" name="paymentMethod" value="cod" onchange="togglePaymentMethod()">
+            Cash on Delivery
+          </label>
+        </div>
+      </div>
+      <div class="order-summary-checkout">
+        <h2>Order Summary</h2>
+        <div id="orderItems"></div>
+        <div class="summary-item"><span>Subtotal</span><span id="coSubtotal">₹0</span></div>
+        <div class="summary-item"><span>Delivery</span><span id="coDelivery">₹0</span></div>
+        <div class="summary-item" id="coDiscountRow" style="display:none;"><span>Discount</span><span id="coDiscount">-₹0</span></div>
+        <div class="summary-item total"><span>Total</span><span id="coTotal">₹0</span></div>
+        <button class="btn btn-accent pay-btn" id="payButton" onclick="processOrder()">
+          <i class="fas fa-lock"></i> <span id="btnText">Pay Securely</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-grid">
+      <div><h4>FalconSports</h4><p>Premium sportswear engineered for athletes.</p></div>
+      <div><h4>Shop</h4><a href="collection.html">Collection</a><a href="shoes.html">Shoes</a><a href="kitbuilder.html">Kit Builder</a><a href="about.html">About</a></div>
+      <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div class="footer-bottom">
+      <img src="falcon-stacked.png" alt="FalconSports" style="height:40px; filter:invert(1); margin-bottom:10px;">
+      <p>© 2026 FalconSports. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // Cart data
+    let cartData = JSON.parse(localStorage.getItem('falconCart')) || [];
+    let appliedCoupon = null;  // { code, discountPercent }
+
+    // Parse coupon from URL if any
+    const urlParams = new URLSearchParams(window.location.search);
+    const couponCode = urlParams.get('coupon');
+
+    async function initCheckout() {
+      if (cartData.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+      }
+
+      // Validate coupon from URL
+      if (couponCode) {
+        const result = await validateCoupon(couponCode);
+        if (result.valid) {
+          appliedCoupon = { code: couponCode, discountPercent: result.discountPercent };
+          showNotification(`Coupon ${couponCode} applied!`);
+        } else {
+          showNotification('Coupon invalid or expired');
+        }
+      }
+
+      renderOrderSummary();
+      togglePaymentMethod(); // set initial button text
+    }
+
+    function renderOrderSummary() {
+      const itemsContainer = document.getElementById('orderItems');
+      const subtotal = cartData.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+      const delivery = subtotal >= 1999 ? 0 : 149;
+      let discount = 0;
+      if (appliedCoupon) {
+        discount = Math.round(subtotal * appliedCoupon.discountPercent / 100);
+      }
+      const total = subtotal + delivery - discount;
+
+      itemsContainer.innerHTML = cartData.map(item => `
+        <div class="summary-item">
+          <span>${item.name} ${item.size ? '(' + item.size + ')' : ''} × ${item.qty || 1}</span>
+          <span>₹${item.price * (item.qty || 1)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('coSubtotal').textContent = '₹' + subtotal;
+      document.getElementById('coDelivery').textContent = delivery === 0 ? 'FREE' : '₹' + delivery;
+      const discountRow = document.getElementById('coDiscountRow');
+      if (discount > 0) {
+        discountRow.style.display = 'flex';
+        document.getElementById('coDiscount').textContent = '-₹' + discount;
+      } else {
+        discountRow.style.display = 'none';
+      }
+      document.getElementById('coTotal').textContent = '₹' + total;
+    }
+
+    // Toggle button text and behavior based on selected payment method
+    function togglePaymentMethod() {
+      const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const btnText = document.getElementById('btnText');
+      if (method === 'cod') {
+        btnText.textContent = 'Place Order (COD)';
+      } else {
+        btnText.textContent = 'Pay Securely';
+      }
+    }
+
+    window.togglePaymentMethod = togglePaymentMethod;
+
+    // Main order processing function
+    window.processOrder = function() {
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value.trim();
+      const pincode = document.getElementById('pincode').value.trim();
+
+      if (!fullName || !phone || !address || !city || !state || !pincode) {
+        showNotification('Please fill all shipping fields');
+        return;
+      }
+
+      const subtotal = cartData.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+      const delivery = subtotal >= 1999 ? 0 : 149;
+      let discount = 0;
+      if (appliedCoupon) discount = Math.round(subtotal * appliedCoupon.discountPercent / 100);
+      const total = subtotal + delivery - discount;
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+      const orderData = {
+        items: cartData.map(item => ({
+          name: item.name,
+          price: item.price,
+          size: item.size || '',
+          qty: item.qty || 1
+        })),
+        total: subtotal,
+        discount,
+        shipping: delivery,
+        grandTotal: total,
+        couponCode: appliedCoupon ? appliedCoupon.code : null,
+        shippingAddress: { fullName, phone, address, city, state, pincode },
+        status: paymentMethod === 'cod' ? 'Pending' : 'Confirmed', // COD orders pending, paid orders confirmed
+        paymentMethod
+      };
+
+      if (paymentMethod === 'razorpay') {
+        // Razorpay flow
+        const options = {
+          key: 'YOUR_RAZORPAY_KEY_ID',   // Replace with your real key
+          amount: total * 100,
+          currency: 'INR',
+          name: 'FalconSports',
+          description: 'Premium Sportswear',
+          image: 'falcon-symbol.png',
+          handler: function(response) {
+            orderData.paymentId = response.razorpay_payment_id;
+            saveOrder(orderData);
+          },
+          prefill: { name: fullName, contact: phone },
+          theme: { color: '#d32f2f' }
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } else {
+        // Cash on Delivery – save order directly
+        saveOrder(orderData);
+      }
+    };
+
+    async function saveOrder(orderData) {
+      try {
+        const res = await fetch(`${API_URL}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        if (!res.ok) throw new Error('Order save failed');
+        // Clear cart
+        localStorage.removeItem('falconCart');
+        showNotification('Order placed successfully!');
+        setTimeout(() => window.location.href = 'index.html', 2000);
+      } catch (err) {
+        console.error(err);
+        showNotification('Something went wrong. Please try again.');
+      }
+    }
+
+    initCheckout();
+  </script>
+</body>
+</html>

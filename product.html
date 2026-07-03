@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Product Detail</title>
+  <meta name="description" content="FalconSports – Premium sportswear product detail. Engineered for athletes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    /* minimal page‑specific overrides – everything else is in style.css */
+    .product-hero { display: flex; gap: 50px; flex-wrap: wrap; margin: 40px 0; animation: fadeUp 0.6s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .gallery { flex: 1.2; min-width: 320px; }
+    .main-image-wrap { border-radius: 20px; overflow: hidden; background: var(--surface); box-shadow: var(--shadow); cursor: zoom-in; transition: transform 0.4s, box-shadow 0.4s; }
+    .main-image-wrap:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+    .main-image { width: 100%; display: block; transition: transform 0.4s; }
+    .main-image-wrap:hover .main-image { transform: scale(1.03); }
+    .thumbnails { display: flex; gap: 10px; margin-top: 18px; }
+    .thumb { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; opacity: 0.8; transition: 0.2s; }
+    .thumb.active, .thumb:hover { border-color: var(--accent); opacity: 1; }
+    .product-info { flex: 0.95; animation: fadeUp 0.6s ease 0.2s both; }
+    .brand-tag { text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: var(--accent); font-size: 0.8rem; margin-bottom: 8px; }
+    .product-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .rating { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .stars { color: var(--star-color); }
+    .price-section { margin-bottom: 20px; }
+    .current-price { font-size: 2rem; font-weight: 800; color: var(--accent); }
+    .original-price { text-decoration: line-through; color: #999; margin-left: 10px; font-size: 1.1rem; }
+    .description { margin-bottom: 24px; opacity: 0.85; }
+    .color-label, .size-label { font-weight: 600; margin-bottom: 8px; display: block; }
+    .color-options { display: flex; gap: 12px; margin-bottom: 24px; }
+    .color-swatch { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; border: 2px solid #ccc; transition: 0.3s; }
+    .color-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent); }
+    .color-swatch:not(.active):hover { transform: scale(1.15); }
+    .size-options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .size-btn { padding: 12px 20px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-weight: 600; background: var(--surface); color: var(--text); transition: 0.2s; }
+    .size-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
+    .size-btn.out-of-stock { opacity: 0.4; pointer-events: none; text-decoration: line-through; }
+    .stock-message { font-size: 0.9rem; margin-bottom: 16px; font-weight: 600; }
+    .qty-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .qty-btn { width: 44px; height: 44px; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; font-size: 1.2rem; cursor: pointer; color: var(--text); transition: 0.2s; }
+    .qty-btn:hover { background: var(--accent); color: white; }
+    .qty-input { width: 70px; text-align: center; border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: var(--bg); color: var(--text); font-weight: 600; }
+    .delivery-box { background: var(--surface); border-radius: 14px; padding: 18px; margin-bottom: 24px; }
+    .trust-badges { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; font-size: 0.85rem; }
+    .complete-kit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+    .kit-item-card { background: var(--surface); border-radius: 18px; overflow: hidden; cursor: pointer; transition: 0.3s; }
+    .kit-item-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .kit-item-card img { width: 100%; height: 200px; object-fit: cover; }
+    .kit-item-info { padding: 16px; }
+    .floating-kit { position: fixed; top: 90px; right: 20px; background: var(--accent); color: white; border-radius: 30px; padding: 12px 20px; font-weight: 700; z-index: 50; display: none; cursor: pointer; box-shadow: 0 8px 20px rgba(211,47,47,0.3); }
+    .floating-kit.active { display: flex; align-items: center; gap: 8px; }
+    .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--sticky-bg); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 14px 24px; display: none; align-items: center; justify-content: space-between; z-index: 100; }
+    .sticky-bar.active { display: flex; }
+    .sticky-price { font-weight: 800; color: var(--accent); }
+  </style>
+</head>
+<body>
+  <!-- HEADER (identical to other pages) -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <div class="container" id="productDetailContainer"></div>
+
+  <!-- Sticky Purchase Bar -->
+  <div class="sticky-bar" id="stickyBar">
+    <div class="sticky-info">
+      <span id="stickyName"></span>
+      <span class="sticky-price" id="stickyPrice"></span>
+    </div>
+    <button class="btn btn-accent" onclick="addToCartFromDetail()">Add to Cart</button>
+  </div>
+
+  <!-- Floating Kit Counter -->
+  <div class="floating-kit" id="floatingKit" onclick="window.location.href='kitbuilder.html'">
+    <i class="fas fa-cube"></i> Kit (<span id="kitCount">0</span>) ₹<span id="kitTotalFloat">0</span>
+  </div>
+
+  <!-- Fullscreen Image Modal -->
+  <div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreen()">
+    <span class="close">&times;</span>
+    <img id="fullscreenImage" src="">
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div><h4>FalconSports</h4><p>Premium sportswear engineered for athletes.</p></div>
+      <div><h4>Shop</h4><a href="collection.html">Collection</a><a href="shoes.html">Shoes</a><a href="kitbuilder.html">Kit Builder</a><a href="about.html">About</a></div>
+      <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div class="footer-bottom">
+      <img src="falcon-stacked.png" alt="FalconSports" style="height:40px; filter:invert(1);">
+      <p>© 2026 FalconSports. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    (() => {
+      const API_URL = 'http://localhost:5000/api';
+      const params = new URLSearchParams(window.location.search);
+      const productId = params.get('id');
+      let product = null;
+      let allProducts = [];
+      let selectedImageIndex = 0;
+      let selectedSize = null;
+      let quantity = 1;
+      let kitItems = JSON.parse(localStorage.getItem('falconKit')) || [];
+      let reviews = JSON.parse(localStorage.getItem('falconReviews')) || [];
+      let selectedRating = 0;
+      const uploadedPhotos = [];
+
+      function saveKit() { localStorage.setItem('falconKit', JSON.stringify(kitItems)); updateKitCounter(); }
+      function saveReviews() { localStorage.setItem('falconReviews', JSON.stringify(reviews)); }
+
+      async function loadProduct() {
+        try {
+          const res = await fetch(`${API_URL}/products/${productId}`);
+          if (!res.ok) throw new Error('Not found');
+          product = await res.json();
+          const allRes = await fetch(`${API_URL}/products`);
+          allProducts = await allRes.json();
+          render();
+        } catch (err) {
+          document.getElementById('productDetailContainer').innerHTML = '<h2>Product not found.</h2><a href="index.html">Back to Home</a>';
+        }
+      }
+
+      function render() {
+        if (!product) return;
+        const isShoe = product.category && product.category.toLowerCase().includes('shoe');
+        const images = product.images?.length ? product.images : ['https://placehold.co/800x800/1a1a1a/white?text=Falcon'];
+        const sizes = product.sizes || [];
+        const price = product.salePrice || product.price;
+        const originalPrice = product.salePrice ? product.price : null;
+        const productColors = product.colors || [];
+        const container = document.getElementById('productDetailContainer');
+
+        const productReviews = reviews.filter(r => r.productId == product._id && r.approved !== false);
+        const avgRating = productReviews.length ? (productReviews.reduce((s,r) => s + r.rating, 0) / productReviews.length).toFixed(1) : 0;
+        const starDisplay = avgRating > 0 ? '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating)) : '☆☆☆☆☆';
+
+        const sizesHTML = sizes.map(s => {
+          const stock = s.stock;
+          let cls = 'size-btn';
+          if (selectedSize === s.size) cls += ' selected';
+          if (stock === 0) cls += ' out-of-stock';
+          return `<button class="${cls}" data-size="${s.size}" onclick="selectSize('${s.size}', ${stock})">${s.size}</button>`;
+        }).join('');
+        const selectedSizeObj = sizes.find(s => s.size === selectedSize);
+        const stockInfo = selectedSizeObj ? (selectedSizeObj.stock === 0 ? 'Out of Stock' : (selectedSizeObj.stock <= 3 ? `Only ${selectedSizeObj.stock} left` : 'In Stock')) : 'Select a size';
+
+        let colorSectionHTML = '';
+        if (productColors.length > 0) {
+          colorSectionHTML = `
+            <span class="color-label">Color</span>
+            <div class="color-options">
+              ${productColors.map((color, i) => {
+                const colorStyle = getColorStyle(color);
+                return `<div class="color-swatch ${i === selectedImageIndex ? 'active' : ''}" style="background: ${colorStyle};" onclick="switchImage(${i})"></div>`;
+              }).join('')}
+            </div>`;
+        }
+
+        let features, specs, sizeGuideHTML;
+        if (isShoe) {
+          features = ['Lightweight', 'Breathable', 'Performance Cushioning', 'Durable Outsole'];
+          specs = [['Material','Engineered Mesh'],['Sole','Rubber'],['Closure','Lace-Up'],['Weight','280g']];
+          sizeGuideHTML = `<table class="size-guide-table"><tr><th>US</th><th>UK</th><th>EU</th><th>cm</th></tr><tr><td>6</td><td>5</td><td>38</td><td>24.5</td></tr><tr><td>7</td><td>6</td><td>39</td><td>25.5</td></tr><tr><td>8</td><td>7</td><td>40</td><td>26.5</td></tr><tr><td>9</td><td>8</td><td>41</td><td>27.5</td></tr></table>`;
+        } else {
+          features = ['Sweat-Wicking','Breathable Mesh','Athletic Fit','4-Way Stretch'];
+          specs = [['Material','Polyester'],['Fit','Athletic'],['Neck','Round Neck'],['Sleeve','Half Sleeve']];
+          sizeGuideHTML = `<table class="size-guide-table"><tr><th>Size</th><th>Chest</th><th>Length</th></tr><tr><td>S</td><td>38</td><td>27</td></tr><tr><td>M</td><td>40</td><td>28</td></tr><tr><td>L</td><td>42</td><td>29</td></tr></table>`;
+        }
+
+        const reviewListHTML = productReviews.map(r => `
+          <div class="review-card">
+            <div class="review-header"><div><strong>${r.name}</strong> <span style="color:var(--star-color)">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></div><small>${r.createdAt}</small></div>
+            ${r.title ? `<h4>${r.title}</h4>` : ''}<p>${r.text}</p>
+            ${r.photos?.length ? `<div class="review-photos">${r.photos.map(p => `<img src="${p}">`).join('')}</div>` : ''}
+          </div>`).join('');
+
+        const kitProducts = allProducts.filter(p => p.kitBuilder && p._id !== product._id).slice(0,3);
+        const completeKitHTML = kitProducts.map(p => `
+          <div class="kit-item-card" onclick="addToKitFromProduct('${p._id}')">
+            <img src="${p.images?.[0] || 'https://placehold.co/400x300'}" alt="${p.name}">
+            <div class="kit-item-info"><h4>${p.name}</h4><div style="color:var(--accent); font-weight:700;">₹${p.salePrice||p.price}</div><button class="btn btn-secondary btn-sm" style="width:100%; margin-top:8px;">Add to Kit</button></div>
+          </div>`).join('');
+
+        container.innerHTML = `
+          <div class="product-hero">
+            <div class="gallery">
+              <div class="main-image-wrap" onclick="openFullscreen()"><img src="${images[selectedImageIndex]}" class="main-image" id="mainImage" alt="${product.name}"></div>
+              <div class="thumbnails">${images.map((img,i) => `<img src="${img}" class="thumb ${i===selectedImageIndex?'active':''}" onclick="switchImage(${i})">`).join('')}</div>
+            </div>
+            <div class="product-info">
+              <div class="brand-tag">FalconSports</div>
+              <h1 class="product-title">${product.name}</h1>
+              <div class="rating"><span class="stars">${starDisplay}</span><span>(${productReviews.length} reviews)</span></div>
+              <div class="price-section"><span class="current-price">₹${price}</span>${originalPrice ? `<span class="original-price">₹${originalPrice}</span>` : ''}</div>
+              <p class="description">${product.description || 'Engineered for peak performance.'}</p>
+              ${colorSectionHTML}
+              <span class="size-label">${isShoe ? 'Shoe Size' : 'Size'}</span>
+              <div class="size-options">${sizesHTML}</div>
+              <div class="stock-message">${stockInfo}</div>
+              <div class="qty-wrap"><button class="qty-btn" onclick="changeQty(-1)">−</button><input class="qty-input" id="qtyInput" value="1" readonly><button class="qty-btn" onclick="changeQty(1)">+</button></div>
+              <div class="action-btns">
+                <button class="btn btn-accent" style="width:100%;" onclick="addToCartFromDetail()"><i class="fas fa-shopping-bag"></i> ADD TO CART</button>
+                <button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="addToKitFromDetail()"><i class="fas fa-cube"></i> ADD TO KIT BUILDER</button>
+              </div>
+              <div class="delivery-box">
+                <input type="text" placeholder="Enter Pincode" class="pincode-input" style="margin-bottom:10px;">
+                <div>✓ Free Delivery · Cash on Delivery</div>
+                <div class="trust-badges">
+                  <span><i class="fas fa-lock"></i> Secure Checkout</span>
+                  <span><i class="fas fa-star"></i> Premium Quality</span>
+                  <span><i class="fas fa-exchange-alt"></i> Easy Exchange</span>
+                  <span><i class="fas fa-shipping-fast"></i> Fast Shipping</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2 class="section-title">Customer Reviews</h2>
+          <div class="write-review-card">
+            <h3>Write a Review</h3>
+            <div class="star-input" id="starInput">${[1,2,3,4,5].map(n => `<i class="far fa-star" data-value="${n}"></i>`).join('')}</div>
+            <div class="form-grid"><div class="form-group"><label>Name</label><input type="text" id="reviewName"></div><div class="form-group"><label>Email</label><input type="email" id="reviewEmail"></div></div>
+            <div class="form-group"><label>Review Title</label><input type="text" id="reviewTitle"></div>
+            <div class="form-group"><label>Your Review</label><textarea id="reviewText" rows="4"></textarea></div>
+            <div class="photo-upload"><label>Add Photos (max 5)</label><input type="file" id="photoInput" accept="image/*" multiple onchange="previewReviewPhotos()"><div class="photo-preview" id="photoPreview"></div></div>
+            <button class="btn btn-accent" onclick="submitProductReview()">SUBMIT REVIEW</button>
+            <p style="font-size:0.8rem; margin-top:8px; opacity:0.7;">Review will be published after approval.</p>
+          </div>
+          <div id="productReviewsList">${reviewListHTML || '<p>No reviews yet.</p>'}</div>
+          <h2 class="section-title">${isShoe ? 'Shoe' : 'Performance'} Features</h2>
+          <div class="feature-grid">${features.map(f => `<div class="feature-card"><i class="fas fa-check-circle" style="color:var(--accent);"></i><br>${f}</div>`).join('')}</div>
+          <h2 class="section-title">Specifications</h2>
+          <table class="spec-table">${specs.map(s => `<tr><td><strong>${s[0]}</strong></td><td>${s[1]}</td></tr>`).join('')}</table>
+          <h2 class="section-title">Size Guide</h2>${sizeGuideHTML}
+          <h2 class="section-title">Complete Your Kit</h2>
+          <div class="complete-kit-grid">${completeKitHTML}</div>
+        `;
+
+        document.getElementById('stickyName').textContent = product.name;
+        document.getElementById('stickyPrice').textContent = '₹' + price;
+        attachStarEvents();
+      }
+
+      // ===== Star Rating =====
+      function attachStarEvents() {
+        const stars = document.querySelectorAll('#starInput i');
+        stars.forEach(star => {
+          star.addEventListener('click', function() { selectedRating = parseInt(this.dataset.value); updateStarDisplay(selectedRating); });
+          star.addEventListener('mouseenter', function() { const val = parseInt(this.dataset.value); stars.forEach((s,i) => s.className = i < val ? 'fas fa-star active' : 'far fa-star'); });
+          star.addEventListener('mouseleave', () => updateStarDisplay(selectedRating));
+        });
+      }
+      function updateStarDisplay(rating) { const stars = document.querySelectorAll('#starInput i'); stars.forEach((s,i) => s.className = i < rating ? 'fas fa-star active' : 'far fa-star'); }
+
+      // ===== Photo Preview =====
+      window.previewReviewPhotos = function() {
+        const input = document.getElementById('photoInput'); const preview = document.getElementById('photoPreview');
+        uploadedPhotos.length = 0; preview.innerHTML = '';
+        for (let file of input.files) {
+          if (uploadedPhotos.length >= 5) break;
+          const reader = new FileReader();
+          reader.onload = (e) => { uploadedPhotos.push(e.target.result); const img = document.createElement('img'); img.src = e.target.result; preview.appendChild(img); };
+          reader.readAsDataURL(file);
+        }
+      };
+
+      // ===== Submit Review =====
+      window.submitProductReview = function() {
+        const name = document.getElementById('reviewName').value.trim();
+        const email = document.getElementById('reviewEmail').value.trim();
+        const title = document.getElementById('reviewTitle').value.trim();
+        const text = document.getElementById('reviewText').value.trim();
+        if (!name || !text || selectedRating === 0) return showNotification('Please fill all fields and select a rating.');
+        const newReview = { id: Date.now(), productId: product._id, productName: product.name, name, email, rating: selectedRating, title, text, verified: false, photos: uploadedPhotos.slice(), approved: false, createdAt: new Date().toISOString().split('T')[0] };
+        reviews.unshift(newReview); saveReviews(); showNotification('Review submitted!');
+        selectedRating = 0; updateStarDisplay(0);
+        ['reviewName','reviewEmail','reviewTitle','reviewText'].forEach(id => document.getElementById(id).value = '');
+        uploadedPhotos.length = 0; document.getElementById('photoPreview').innerHTML = ''; document.getElementById('photoInput').value = '';
+        render();
+      };
+
+      // ===== Color Helper =====
+      function getColorStyle(color) {
+        if (!color || typeof color !== 'string') return '#888';
+        const trimmed = color.trim();
+        if (/^#([0-9a-fA-F]{3}){1,2}$/.test(trimmed)) return trimmed;
+        if (/^rgb/.test(trimmed)) return trimmed;
+        const normalized = trimmed.toLowerCase().replace(/-/g, ' ');
+        const colorMap = {
+          'black':'#000000','white':'#ffffff','red':'#ff0000','blue':'#0000ff','green':'#008000','yellow':'#ffff00','orange':'#ffa500','purple':'#800080','pink':'#ffc0cb',
+          'navy':'#000080','navy blue':'#000080','darkblue':'#00008b','lightblue':'#add8e6','sky blue':'#87ceeb','royal blue':'#4169e1','midnight blue':'#191970','steel blue':'#4682b4',
+          'violet':'#ee82ee','magenta':'#ff00ff','cyan':'#00ffff','turquoise':'#40e0d0','lavender':'#e6e6fa','khaki':'#f0e68c','salmon':'#fa8072','chocolate':'#d2691e','crimson':'#dc143c',
+          'darkgreen':'#006400','darkred':'#8b0000','lightgreen':'#90ee90','lightgrey':'#d3d3d3','lightgray':'#d3d3d3','darkgrey':'#a9a9a9','darkgray':'#a9a9a9',
+          'maroon':'#800000','teal':'#008080','aqua':'#00ffff','lime':'#00ff00','silver':'#c0c0c0','olive':'#808000','brown':'#a52a2a','beige':'#f5f5dc','tan':'#d2b48c',
+          'gold':'#ffd700','coral':'#ff7f50','indigo':'#4b0082','fuchsia':'#ff00ff','hot pink':'#ff69b4','deep pink':'#ff1493','spring green':'#00ff7f','sea green':'#2e8b57',
+          'forest green':'#228b22','lime green':'#32cd32','lawn green':'#7cfc00','chartreuse':'#7fff00','medium spring green':'#00fa9a','light sea green':'#20b2aa',
+          'dark cyan':'#008b8b','cadet blue':'#5f9ea0','medium turquoise':'#48d1cc','pale turquoise':'#afeeee','light cyan':'#e0ffff','alice blue':'#f0f8ff','azure':'#f0ffff',
+          'honeydew':'#f0fff0','mint cream':'#f5fffa','ghost white':'#f8f8ff','snow':'#fffafa','ivory':'#fffff0','floral white':'#fffaf0','old lace':'#fdf5e6','linen':'#faf0e6',
+          'antique white':'#faebd7','papaya whip':'#ffefd5','blanched almond':'#ffebcd','bisque':'#ffe4c4','peach puff':'#ffdab9','navajo white':'#ffdead','moccasin':'#ffe4b5',
+          'wheat':'#f5deb3','burlywood':'#deb887','sandy brown':'#f4a460','peru':'#cd853f','sienna':'#a0522d','saddle brown':'#8b4513','rosy brown':'#bc8f8f',
+          'indian red':'#cd5c5c','light coral':'#f08080','dark salmon':'#e9967a','light salmon':'#ffa07a','tomato':'#ff6347','orange red':'#ff4500','dark orange':'#ff8c00',
+          'goldenrod':'#daa520','dark goldenrod':'#b8860b','pale goldenrod':'#eee8aa','light goldenrod':'#fafad2','dark khaki':'#bdb76b','lemon chiffon':'#fffacd',
+          'light yellow':'#ffffe0','yellow green':'#9acd32','green yellow':'#adff2f','olive drab':'#6b8e23','dark olive green':'#556b2f','medium aquamarine':'#66cdaa',
+          'light slate gray':'#778899','slate gray':'#708090','dark slate gray':'#2f4f4f','dim gray':'#696969','light steel blue':'#b0c4de','lavender blush':'#fff0f5',
+          'misty rose':'#ffe4e1','seashell':'#fff5ee','cornsilk':'#fff8dc','lemonchiffon':'#fffacd','lightgoldenrodyellow':'#fafad2','lightyellow':'#ffffe0','lawngreen':'#7cfc00',
+          'springgreen':'#00ff7f','mediumspringgreen':'#00fa9a','lightgreen':'#90ee90','palegreen':'#98fb98','darkseagreen':'#8fbc8f','mediumseagreen':'#3cb371','seagreen':'#2e8b57',
+          'darkgreen':'#006400','greenyellow':'#adff2f','yellowgreen':'#9acd32','olivedrab':'#6b8e23','darkolivegreen':'#556b2f','cadetblue':'#5f9ea0','darkcyan':'#008b8b',
+          'lightseagreen':'#20b2aa','darkturquoise':'#00ced1','mediumturquoise':'#48d1cc','paleturquoise':'#afeeee','aquamarine':'#7fffd4','lightcyan':'#e0ffff',
+          'darkgray':'#a9a9a9','darkgrey':'#a9a9a9','dimgray':'#696969','dimgrey':'#696969','gray':'#808080','grey':'#808080','lightgray':'#d3d3d3','lightgrey':'#d3d3d3',
+          'slategray':'#708090','slategrey':'#708090','lightslategray':'#778899','lightslategrey':'#778899','darkslategray':'#2f4f4f','darkslategrey':'#2f4f4f',
+          'powder blue':'#b0e0e6','cornflower blue':'#6495ed','dodger blue':'#1e90ff','deep sky blue':'#00bfff','pale violet red':'#db7093','medium violet red':'#c71585',
+          'dark violet':'#9400d3','dark orchid':'#9932cc','plum':'#dda0dd','thistle':'#d8bfd8','orchid':'#da70d6','sand':'#c2b280','dark grey':'#a9a9a9','light grey':'#d3d3d3'
+        };
+        if (colorMap[normalized]) return colorMap[normalized];
+        const noSpace = normalized.replace(/\s/g,'');
+        if (colorMap[noSpace]) return colorMap[noSpace];
+        return '#888';
+      }
+
+      // ===== Image / Size / Qty / Cart / Kit =====
+      window.switchImage = (index) => {
+        selectedImageIndex = index;
+        document.getElementById('mainImage').src = product.images[index];
+        document.querySelectorAll('.thumb').forEach((t,i) => t.classList.toggle('active', i===index));
+        if (product.colors?.length) document.querySelectorAll('.color-swatch').forEach((c,i) => c.classList.toggle('active', i===index));
+      };
+      window.selectSize = (size, stock) => { if (stock <= 0) return; selectedSize = size; document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected')); document.querySelector(`.size-btn[data-size="${size}"]`)?.classList.add('selected'); };
+      window.changeQty = (delta) => { const input = document.getElementById('qtyInput'); let val = parseInt(input.value) + delta; if (val < 1) val = 1; input.value = val; quantity = val; };
+
+      // ✅ CALLS THE GLOBAL addToCart (defined in main.js) with size & qty
+      window.addToCartFromDetail = () => {
+        if (!selectedSize) return showNotification('Select a size');
+        const finalPrice = product.salePrice || product.price;
+        addToCart(product.name, finalPrice, {
+          size: selectedSize,
+          qty: quantity,
+          image: product.images?.[0] || ''
+        });
+        showNotification('Added to cart!');
+      };
+
+      window.addToKitFromDetail = () => {
+        let type = 'general'; const cat = product.category?.toLowerCase() || '';
+        if (cat.includes('t-shirt') || cat.includes('tee')) type = 'tshirt';
+        else if (cat.includes('pant') || cat.includes('short')) type = 'bottom';
+        else if (cat.includes('shoe')) type = 'shoes';
+        kitItems = kitItems.filter(i => i.type !== type);
+        kitItems.push({ name: product.name, price: product.salePrice || product.price, type, id: Date.now() });
+        saveKit();
+        showNotification('Added to your kit!');
+      };
+      window.addToKitFromProduct = (pid) => {
+        const p = allProducts.find(x => x._id === pid); if (!p) return;
+        let type = 'general'; const cat = p.category?.toLowerCase() || '';
+        if (cat.includes('t-shirt') || cat.includes('tee')) type = 'tshirt';
+        else if (cat.includes('pant') || cat.includes('short')) type = 'bottom';
+        else if (cat.includes('shoe')) type = 'shoes';
+        kitItems = kitItems.filter(i => i.type !== type);
+        kitItems.push({ name: p.name, price: p.salePrice||p.price, type, id: Date.now() }); saveKit();
+        showNotification(`${p.name} added to kit!`);
+      };
+
+      window.openFullscreen = () => { document.getElementById('fullscreenImage').src = product.images[selectedImageIndex]; document.getElementById('fullscreenModal').style.display = 'flex'; };
+      window.closeFullscreen = () => { document.getElementById('fullscreenModal').style.display = 'none'; };
+
+      function updateKitCounter() {
+        const count = kitItems.length; const total = kitItems.reduce((s,i) => s + i.price, 0);
+        document.getElementById('kitCount').textContent = count; document.getElementById('kitTotalFloat').textContent = total;
+        document.getElementById('floatingKit').classList.toggle('active', count > 0);
+      }
+      window.addEventListener('scroll', () => { document.getElementById('stickyBar').classList.toggle('active', window.scrollY > 400); });
+
+      // Start
+      loadProduct();
+      updateKitCounter();
+    })();
+  </script>
+</body>
+</html>

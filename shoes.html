@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Shoes</title>
+  <meta name="description" content="Browse FalconSports premium footwear – running, training, and sports shoes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    /* Only shoe‑page specific overrides – everything else is in style.css */
+    .shoe-hero {
+      position: relative;
+      height: 55vh;
+      min-height: 350px;
+      background: url('shoe-hero.png') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+    .shoe-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+    body.dark .shoe-hero::after {
+      background: rgba(0,0,0,0.6);
+    }
+    .hero-content { position: relative; z-index: 2; color: #fff; }
+    .shoe-hero h1 { font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -2px; }
+    .shoe-hero p { font-size: 1.2rem; margin-top: 12px; opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <!-- HEADER (identical to other pages) -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html" class="active">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <!-- HERO -->
+  <div class="shoe-hero">
+    <div class="hero-content">
+      <h1>FALCON FOOTWEAR</h1>
+      <p>Built For Speed. Built For Performance.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Sticky Category Bar -->
+    <div class="sticky-cat-bar" id="stickyCatBar">
+      <div class="cat-tabs" id="catTabs">
+        <span class="cat-tab active" onclick="filterShoes('all', this)">ALL</span>
+        <span class="cat-tab" onclick="filterShoes('Running', this)">RUNNING</span>
+        <span class="cat-tab" onclick="filterShoes('Training', this)">TRAINING</span>
+        <span class="cat-tab" onclick="filterShoes('Sports', this)">SPORTS</span>
+      </div>
+    </div>
+
+    <!-- Shoe Grid -->
+    <div class="product-grid" id="shoeGrid"></div>
+    <div class="no-results" id="noResults" style="display:none; text-align:center; padding:40px; opacity:0.7;">No shoes found.</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-grid">
+      <div><h4>FalconSports</h4><p>Premium sportswear engineered for athletes.</p></div>
+      <div><h4>Shop</h4><a href="collection.html">Collection</a><a href="shoes.html">Shoes</a><a href="kitbuilder.html">Kit Builder</a><a href="about.html">About</a></div>
+      <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div class="footer-bottom">
+      <img src="falcon-stacked.png" alt="FalconSports" style="height:40px; filter:invert(1);">
+      <p>© 2026 FalconSports. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS – main.js handles theme, mobile menu, cart, notifications -->
+  <script src="main.js"></script>
+  <script>
+    (() => {
+      const API_URL = 'http://localhost:5000/api';
+      let allShoes = [];
+      let activeCategory = 'all';
+
+      // Recognized shoe categories – even if you named them "Running", "Sports", etc.
+      const shoeCategories = ['running', 'training', 'sports', 'shoe', 'footwear', 'sneakers'];
+
+      function isShoeCategory(cat) {
+        if (!cat) return false;
+        return shoeCategories.some(c => cat.toLowerCase().includes(c));
+      }
+
+      async function loadShoes() {
+        try {
+          const res = await fetch(`${API_URL}/products`);
+          const products = await res.json();
+          // 👟 Only shoe products
+          allShoes = products.filter(p => p.category && isShoeCategory(p.category));
+          applyFilters();
+        } catch (err) {
+          console.error('Failed to load shoes:', err);
+          document.getElementById('shoeGrid').innerHTML = '<p class="no-results">Could not load shoes.</p>';
+        }
+      }
+
+      function getImage(p) { return (p.images && p.images.length) ? p.images[0] : 'https://placehold.co/400x400/1a1a1a/white?text=Shoe'; }
+      function getPrice(p) { return p.salePrice || p.price; }
+      function getBadge(p) {
+        if (p.badge) return p.badge;
+        const hash = (p._id || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+        return ['NEW','BEST SELLER','LIGHTWEIGHT','LIMITED'][hash % 4];
+      }
+      function getBadgeClass(badge) {
+        if (badge === 'NEW') return 'badge-new';
+        if (badge === 'BEST SELLER') return 'badge-seller';
+        if (badge === 'LIGHTWEIGHT') return 'badge-lightweight';
+        return 'badge-limited';
+      }
+      function getRating(p) { return p.rating || (4.5 + Math.random() * 0.5).toFixed(1); }
+
+      window.filterShoes = function(cat, el) {
+        activeCategory = cat;
+        document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+        if (el) el.classList.add('active');
+        applyFilters();
+      };
+
+      function applyFilters() {
+        let filtered = allShoes.filter(p => {
+          if (activeCategory !== 'all' && p.category !== activeCategory) return false;
+          return true;
+        });
+        renderShoeGrid(filtered);
+        document.getElementById('noResults').style.display = filtered.length === 0 ? 'block' : 'none';
+      }
+
+      function renderShoeGrid(items) {
+        const grid = document.getElementById('shoeGrid');
+        grid.innerHTML = items.map(p => {
+          const price = getPrice(p);
+          const badge = getBadge(p);
+          const rating = getRating(p);
+          return `
+          <div class="product-card" onclick="window.location.href='product.html?id=${p._id}'">
+            <div class="img-wrap">
+              <img src="${getImage(p)}" alt="${p.name}">
+              <span class="product-badge ${getBadgeClass(badge)}">${badge}</span>
+              <div class="hover-actions" onclick="event.stopPropagation();">
+                <button onclick="addShoeToCart('${p._id}')"><i class="fas fa-shopping-cart"></i></button>
+                <button onclick="addShoeToKit('${p._id}')"><i class="fas fa-cube"></i></button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>${p.name}</h3>
+              <div class="price">₹${price}</div>
+              <div class="rating">★★★★★ ${rating}</div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      // Cart & Kit actions – use the global addToCart / addToKit (from main.js)
+      window.addShoeToCart = function(id) {
+        const p = allShoes.find(x => x._id === id);
+        if (!p) return;
+        // Call the global addToCart that stores size, qty, image
+        addToCart(p.name, getPrice(p), {
+          size: (p.sizes && p.sizes[0]) ? p.sizes[0].size : '',
+          qty: 1,
+          image: getImage(p)
+        });
+        showNotification(p.name + ' added to cart!');
+      };
+
+      window.addShoeToKit = function(id) {
+        const p = allShoes.find(x => x._id === id);
+        if (!p) return;
+        // Use the global addToKit function (if you have one in main.js) or fallback to direct
+        if (typeof addToKit === 'function') {
+          // Determine type
+          const cat = (p.category || '').toLowerCase();
+          let type = 'general';
+          if (cat.includes('shoe')) type = 'shoes';
+          addToKit(p.name, getPrice(p), type, {
+            size: (p.sizes && p.sizes[0]) ? p.sizes[0].size : 'M',
+            image: getImage(p)
+          });
+        } else {
+          // Fallback: manage kit in localStorage directly (should not happen if main.js is loaded)
+          let kit = JSON.parse(localStorage.getItem('falconKit')) || [];
+          kit.push({ name: p.name, price: getPrice(p), type: 'shoes', id: p._id, size: (p.sizes && p.sizes[0]) ? p.sizes[0].size : 'M', image: getImage(p), kitId: Date.now() });
+          localStorage.setItem('falconKit', JSON.stringify(kit));
+        }
+        showNotification(p.name + ' added to kit!');
+      };
+
+      // Start
+      loadShoes();
+    })();
+  </script>
+</body>
+</html>

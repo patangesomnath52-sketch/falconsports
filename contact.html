@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FalconSports | Contact Us</title>
+  <meta name="description" content="Contact FalconSports – premium sportswear, custom team kits, bulk orders, corporate inquiries.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="falcon-symbol.png">
+  <style>
+    /* Contact hero – same abstract design */
+    .contact-hero {
+      position: relative; height: 60vh; min-height: 400px; background: url('contact-hero.png') center/cover no-repeat; background-color: #fafafa;
+      display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; margin-bottom: 40px;
+    }
+    body.dark .contact-hero { background-color: #0a0a0a; }
+    .hero-wing {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 120%; height: 120%; opacity: 0.05; z-index: 1; pointer-events: none;
+    }
+    .hero-wing svg { width: 100%; height: 100%; object-fit: contain; }
+    .hero-wing svg path { fill: currentColor; color: #000; }
+    body.dark .hero-wing svg path { color: #fff; }
+    .hero-mountains {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 30%; z-index: 2; pointer-events: none; opacity: 0.1;
+    }
+    .hero-mountains svg { width: 100%; height: 100%; preserveAspectRatio: none; }
+    .hero-mountains svg polygon { fill: #000; }
+    body.dark .hero-mountains svg polygon { fill: #fff; }
+    .hero-lines { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .gold-line { position: absolute; background: rgba(201,168,76,0.25); }
+    .line-top-left { top: 0; left: 0; width: 150px; height: 1px; }
+    .line-top-left::after { content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 80px; background: inherit; }
+    .line-bottom-right { bottom: 0; right: 0; width: 150px; height: 1px; }
+    .line-bottom-right::after { content: ''; position: absolute; right: 0; bottom: 0; width: 1px; height: 80px; background: inherit; }
+    .contact-hero::after {
+      content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 4;
+    }
+    body.dark .contact-hero::after { background: rgba(0,0,0,0.6); }
+    .hero-content { position: relative; z-index: 5; color: #fff; }
+    .contact-hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; }
+    .contact-hero p { font-size: 1.2rem; margin-top: 15px; opacity: 0.9; }
+
+    /* rest of the page styles same as before */
+    .page-hero { text-align: center; padding: 60px 0 30px; animation: fadeUp 0.6s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0; animation: fadeUp 0.8s ease 0.2s both; }
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-info-cards { display: flex; flex-direction: column; gap: 20px; }
+    .info-card { background: var(--card-bg); border-radius: 18px; padding: 24px; border: 1px solid var(--border); transition: 0.3s; box-shadow: var(--shadow-sm); }
+    .info-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .info-card i { font-size: 1.8rem; color: var(--accent); margin-bottom: 12px; }
+    .info-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .info-card p { opacity: 0.85; }
+    .contact-form { background: var(--card-bg); border-radius: 18px; padding: 32px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 0.9rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: inherit; transition: 0.3s; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(211,47,47,0.1); }
+    .bulk-section { background: var(--surface); border-radius: 24px; padding: 50px; margin: 60px 0; text-align: center; animation: fadeUp 0.8s ease 0.4s both; }
+    .bulk-section h2 { font-size: 2rem; font-weight: 800; }
+    .bulk-section p { margin: 16px 0; opacity: 0.9; }
+    .whatsapp-btn { background: #25D366; color: white; padding: 14px 32px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.3s; margin-top: 10px; }
+    .whatsapp-btn:hover { background: #1ebe57; transform: translateY(-2px); }
+    .map-placeholder { width: 100%; height: 300px; background: var(--surface); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; opacity: 0.7; margin: 40px 0; border: 1px solid var(--border); animation: fadeUp 0.8s ease 0.6s both; }
+    .btn { padding: 14px 34px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; background: var(--btn-bg); color: var(--btn-text); font-size: 0.9rem; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-accent:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 2px solid white; color: white; }
+    footer { background: #111; color: #bbb; padding: 40px 0 30px; margin-top: 60px; text-align: center; }
+    body.dark footer { background: #000; }
+    .footer-logo { height: 50px; filter: invert(1); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="active">Contact</a>
+      </div>
+      <div class="header-actions">
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <!-- Hero with abstract design -->
+  <section class="contact-hero">
+    <div class="hero-wing">
+      <svg viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
+        <path d="M900,100 C700,0 300,50 100,300 C50,450 80,600 200,650 C300,690 450,550 500,400 C550,550 700,690 800,650 C920,600 950,450 900,300 C850,150 800,100 900,100 Z" />
+      </svg>
+    </div>
+    <div class="hero-mountains">
+      <svg viewBox="0 0 1000 300" preserveAspectRatio="none">
+        <polygon points="0,300 200,50 400,200 600,20 800,180 1000,60 1000,300" />
+      </svg>
+    </div>
+    <div class="hero-lines">
+      <div class="gold-line line-top-left"></div>
+      <div class="gold-line line-bottom-right"></div>
+    </div>
+    <div class="hero-content">
+      <h1>Get in Touch</h1>
+      <p>We'd love to hear from you – whether it's about our products, custom kits, or bulk orders.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info-cards" id="contactInfoCards">
+        <!-- Filled dynamically from localStorage -->
+      </div>
+      <div class="contact-form">
+        <h3 style="margin-bottom:20px;">Send a Message</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" id="name" placeholder="Your name"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Subject</label><input type="text" id="subject" placeholder="How can we help?"></div>
+        <div class="form-group"><label>Message</label><textarea id="message" rows="5" placeholder="Tell us more about your inquiry..."></textarea></div>
+        <button class="btn btn-accent" style="width:100%;" onclick="submitForm()"><i class="fas fa-paper-plane"></i> SEND MESSAGE</button>
+      </div>
+    </div>
+
+    <div class="bulk-section">
+      <h2>Bulk Orders & Custom Kits</h2>
+      <p>Need team kits for your school, college, academy, or corporate event?<br>We offer special pricing, custom designs, and dedicated support.</p>
+      <a href="mailto:" id="bulkEmailLink" class="btn btn-accent" style="width:auto; display:inline-flex; margin-right:10px;">
+        <i class="fas fa-envelope"></i> Email Us
+      </a>
+      <a href="https://wa.me/" id="bulkWhatsAppLink" target="_blank" class="whatsapp-btn" style="width:auto; display:inline-flex;">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+    </div>
+
+    <div class="map-placeholder">
+      <i class="fas fa-map-marked-alt"></i>   Visit our flagship store – map coming soon
+    </div>
+  </div>
+
+  <footer>
+    <div class="container" style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+      <img src="falcon-stacked.png" alt="FalconSports" class="footer-logo" style="filter: invert(1);">
+      <div>© 2026 FalconSports. Premium Sportswear.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // Load contact info from localStorage (saved via admin Settings)
+
+// Load settings
+const settings = JSON.parse(localStorage.getItem('falconSettings')) || {};
+
+document.getElementById('contactInfoCards').innerHTML = `
+  <div class="info-card">
+    <i class="fas fa-map-marker-alt"></i>
+    <h3>Our Location</h3>
+    <p>${settings.address || '123 Performance Lane, Sportstown, India'}</p>
+  </div>
+  <div class="info-card">
+    <i class="fas fa-phone-alt"></i>
+    <h3>Phone</h3>
+    <p>${settings.phone || '+91 98765 43210'}<br>Mon–Sat, 10:00 AM – 7:00 PM</p>
+  </div>
+  <div class="info-card">
+    <i class="fas fa-envelope"></i>
+    <h3>Email</h3>
+    <p>${settings.email || 'support@falconsports.com'}<br>sales@falconsports.com</p>
+  </div>
+  <div class="info-card">
+    <i class="fab fa-whatsapp"></i>
+    <h3>WhatsApp</h3>
+    <p>${settings.whatsapp || '+91 98765 43210'}<br>Chat with us for quick queries</p>
+    <a href="https://wa.me/${(settings.whatsapp || '+919876543210').replace(/\D/g,'')}" target="_blank" class="whatsapp-btn" style="margin-top:12px; display:inline-flex; width:auto; padding:10px 20px;">
+      <i class="fab fa-whatsapp"></i> Start Chat
+    </a>
+  </div>
+`;
+    // Populate info cards
+    document.getElementById('contactInfoCards').innerHTML = `
+      <div class="info-card">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>Our Location</h3>
+        <p>${settings.address || '123 Performance Lane, Sportstown, India'}</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-phone-alt"></i>
+        <h3>Phone</h3>
+        <p>${settings.phone || '+91 98765 43210'}<br>Mon–Sat, 10:00 AM – 7:00 PM</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-envelope"></i>
+        <h3>Email</h3>
+        <p>${settings.email || 'support@falconsports.com'}<br>sales@falconsports.com</p>
+      </div>
+      <div class="info-card">
+        <i class="fab fa-whatsapp"></i>
+        <h3>WhatsApp</h3>
+        <p>${settings.whatsapp || '+91 98765 43210'}<br>Chat with us for quick queries</p>
+        <a href="https://wa.me/${(settings.whatsapp || '+919876543210').replace(/\D/g,'')}" target="_blank" class="whatsapp-btn" style="margin-top:12px; display:inline-flex; width:auto; padding:10px 20px;">
+          <i class="fab fa-whatsapp"></i> Start Chat
+        </a>
+      </div>
+    `;
+
+    // Update bulk email / WhatsApp links
+    const bulkEmail = document.getElementById('bulkEmailLink');
+    const bulkWhatsApp = document.getElementById('bulkWhatsAppLink');
+    if (settings.email) bulkEmail.href = `mailto:${settings.email}`;
+    if (settings.whatsapp) bulkWhatsApp.href = `https://wa.me/${settings.whatsapp.replace(/\D/g,'')}`;
+
+    // Contact form (demo)
+   async function submitForm() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const subject = document.getElementById('subject').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!name || !email || !message) {
+    showNotification('Please fill all required fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, subject, message })
+    });
+
+    if (!res.ok) throw new Error('Failed to send');
+    showNotification('Thanks! Your message has been sent.');
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('subject').value = '';
+    document.getElementById('message').value = '';
+  } catch (err) {
+    console.error(err);
+    showNotification('Something went wrong. Please try again.');
+  }
+}
+  </script>
+</body>
+</html>
