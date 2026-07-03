@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+  <title>FalconSports | My Account</title>
+  <meta name="description" content="Manage your FalconSports account, orders, and personal details." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="icon" type="image/png" href="falcon-symbol.png" />
+  <style>
+    /* ===== GLOBAL VARIABLES (matching your brand) ===== */
+    :root {
+      --bg: #ffffff;
+      --text: #0a0a0a;
+      --surface: #f5f5f5;
+      --border: #e0e0e0;
+      --card-bg: #ffffff;
+      --accent: #d32f2f;
+      --accent-hover: #b71c1c;
+      --accent-light: rgba(211, 47, 47, 0.08);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      --radius: 16px;
+      --transition: 0.3s ease;
+      --header-bg: rgba(255, 255, 255, 0.85);
+      --footer-bg: #f5f5f5;
+      --footer-text: #333;
+      --footer-heading: #111;
+    }
+    body.dark {
+      --bg: #0a0a0a;
+      --text: #f0f0f0;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --card-bg: #1a1a1a;
+      --header-bg: rgba(10, 10, 10, 0.85);
+      --footer-bg: #111111;
+      --footer-text: #bbbbbb;
+      --footer-heading: #ffffff;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.4s ease, color 0.4s ease;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== HEADER (same as index) ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: var(--header-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .nav-logo {
+      height: 28px;
+      transition: 0.3s;
+      filter: brightness(0) invert(0);
+    }
+    body.dark .nav-logo {
+      filter: brightness(0) invert(1);
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      transition: 0.2s;
+      padding: 4px 0;
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+    .header-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .header-actions i {
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text);
+      transition: 0.2s;
+    }
+    .header-actions i:hover {
+      color: var(--accent);
+    }
+    .theme-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .hamburger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      max-width: 80%;
+      height: 100%;
+      background: var(--bg);
+      z-index: 200;
+      padding: 24px;
+      transition: right 0.3s;
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mobile-menu.open {
+      right: 0;
+    }
+    .mobile-menu a {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .mobile-menu-close {
+      align-self: flex-end;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 199;
+      display: none;
+    }
+    .menu-overlay.show {
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .hamburger {
+        display: block;
+      }
+    }
+
+    /* ===== ACCOUNT DASHBOARD LAYOUT ===== */
+    .account-section {
+      padding: 40px 0 60px;
+    }
+    .account-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    @media (max-width: 768px) {
+      .account-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar */
+    .account-sidebar {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      height: fit-content;
+      box-shadow: var(--shadow);
+    }
+    .account-sidebar .user-summary {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .account-sidebar .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 auto 12px;
+      text-transform: uppercase;
+    }
+    .account-sidebar .user-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .account-sidebar .user-email {
+      color: var(--footer-text);
+      font-size: 0.85rem;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sidebar-nav button {
+      background: none;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      font-family: inherit;
+    }
+    .sidebar-nav button i {
+      width: 20px;
+      text-align: center;
+      color: var(--footer-text);
+    }
+    .sidebar-nav button:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    .sidebar-nav button.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .sidebar-nav button.active i {
+      color: #fff;
+    }
+
+    /* Content panels */
+    .account-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px 28px;
+      box-shadow: var(--shadow);
+      min-height: 400px;
+    }
+    .panel {
+      display: none;
+      animation: fadeUp 0.3s ease;
+    }
+    .panel.active {
+      display: block;
+    }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .panel h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .panel .subtitle {
+      color: var(--footer-text);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: var(--footer-text);
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      transition: var(--transition);
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .btn {
+      padding: 12px 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-danger {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+    .btn-danger:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Order cards */
+    .order-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--accent);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .order-card .order-info {
+      flex: 1;
+      min-width: 180px;
+    }
+    .order-card .order-info strong {
+      display: block;
+      font-weight: 700;
+    }
+    .order-card .order-info span {
+      font-size: 0.85rem;
+      color: var(--footer-text);
+    }
+    .order-status {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .order-status.delivered {
+      background: #22c55e20;
+      color: #22c55e;
+    }
+    .order-status.shipped {
+      background: #3b82f620;
+      color: #60a5fa;
+    }
+    .order-status.processing {
+      background: #f59e0b20;
+      color: #fbbf24;
+    }
+    .order-status.cancelled {
+      background: #ef444420;
+      color: #f87171;
+    }
+
+    /* Address cards */
+    .address-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .address-card .addr-label {
+      font-weight: 700;
+      display: block;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      transition: 0.4s;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 30px;
+      text-align: center;
+    }
+    .footer-grid h4 {
+      color: var(--footer-heading);
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    .footer-grid a {
+      color: var(--footer-text);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+    .footer-grid a:hover {
+      color: var(--accent);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      margin-top: 30px;
+      padding-top: 20px;
+      text-align: center;
+    }
+    .footer-bottom img {
+      height: 32px;
+      filter: brightness(0) invert(0.7);
+      margin-bottom: 8px;
+    }
+    body.dark .footer-bottom img {
+      filter: brightness(0) invert(1);
+    }
+
+    /* ===== TOAST ===== */
+    .toast-msg {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 28px;
+      color: var(--text);
+      font-weight: 600;
+      z-index: 9999;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      max-width: 90%;
+      text-align: center;
+      border-left: 5px solid var(--accent);
+      animation: fadeUp 0.3s ease;
+      font-size: 0.95rem;
+    }
+    .toast-msg.success {
+      border-left-color: #22c55e;
+    }
+    .toast-msg.error {
+      border-left-color: #ef4444;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .account-content {
+        padding: 20px 16px;
+      }
+      .order-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .order-card .order-actions {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo" /></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="collection.html">Collection</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="header-actions">
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+        <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
+        <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <i class="fas fa-user-circle" style="color:var(--accent);" title="My Account"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
+    <a href="index.html" onclick="closeMobileMenu()">Home</a>
+    <a href="collection.html" onclick="closeMobileMenu()">Collection</a>
+    <a href="shoes.html" onclick="closeMobileMenu()">Shoes</a>
+    <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+    <hr style="border-color:var(--border);" />
+    <a href="account.html" onclick="closeMobileMenu()"><i class="fas fa-user-circle"></i> My Account</a>
+    <a href="#" onclick="closeMobileMenu(); signOutUser();"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+  </div>
+
+  <!-- ===== ACCOUNT DASHBOARD ===== -->
+  <section class="account-section">
+    <div class="container">
+      <h2 style="font-size:1.8rem; font-weight:800;">My Account</h2>
+      <div class="account-grid">
+
+        <!-- SIDEBAR -->
+        <aside class="account-sidebar" id="accountSidebar">
+          <div class="user-summary">
+            <div class="avatar" id="userAvatar">F</div>
+            <div class="user-name" id="userName">Falcon Athlete</div>
+            <div class="user-email" id="userEmail">athlete@falconsports.com</div>
+          </div>
+          <nav class="sidebar-nav">
+            <button class="active" data-panel="profile"><i class="fas fa-user"></i> Profile</button>
+            <button data-panel="orders"><i class="fas fa-box"></i> Orders</button>
+            <button data-panel="addresses"><i class="fas fa-map-pin"></i> Addresses</button>
+            <button data-panel="settings"><i class="fas fa-cog"></i> Settings</button>
+            <button onclick="signOutUser()" style="color:var(--accent); margin-top:12px; border-top:1px solid var(--border); padding-top:16px;">
+              <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+          </nav>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="account-content">
+
+          <!-- ===== PANEL: PROFILE ===== -->
+          <div class="panel active" id="panel-profile">
+            <h3>Personal Details</h3>
+            <p class="subtitle">Manage your name and contact information</p>
+            <form id="profileForm" onsubmit="event.preventDefault(); updateProfile();">
+              <div class="form-group">
+                <label>Display Name</label>
+                <input type="text" id="displayNameInput" placeholder="Your full name" />
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="emailInput" disabled style="opacity:0.6;" />
+              </div>
+              <button type="submit" class="btn btn-accent"><i class="fas fa-save"></i> Update Profile</button>
+            </form>
+          </div>
+
+          <!-- ===== PANEL: ORDERS ===== -->
+          <div class="panel" id="panel-orders">
+            <h3>Order History</h3>
+            <p class="subtitle">Track all your purchases</p>
+            <div id="orderList">
+              <!-- Rendered by JavaScript -->
+            </div>
+          </div>
+
+          <!-- ===== PANEL: ADDRESSES ===== -->
+          <div class="panel" id="panel-addresses">
+            <h3>Saved Addresses</h3>
+            <p class="subtitle">Manage your shipping addresses</p>
+            <div id="addressList">
+              <!-- Rendered by JavaScript -->
+            </div>
+            <button class="btn btn-outline mt-16" onclick="addDummyAddress()"><i class="fas fa-plus"></i> Add New Address</button>
+          </div>
+
+          <!-- ===== PANEL: SETTINGS ===== -->
+          <div class="panel" id="panel-settings">
+            <h3>Account Settings</h3>
+            <p class="subtitle">Security & preferences</p>
+            <div style="margin-bottom:16px;">
+              <label style="font-weight:700; display:block; margin-bottom:4px;">Change Password</label>
+              <div class="form-row">
+                <input type="password" id="newPassword" placeholder="New password" />
+                <input type="password" id="confirmPassword" placeholder="Confirm password" />
+              </div>
+              <button class="btn btn-accent" onclick="changePassword()"><i class="fas fa-key"></i> Update Password</button>
+            </div>
+            <hr style="border-color:var(--border); margin:20px 0;" />
+            <div>
+              <button class="btn btn-danger" onclick="signOutUser()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+            </div>
+          </div>
+
+        </div><!-- /account-content -->
+      </div><!-- /account-grid -->
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container footer-grid">
+      <div><h4>FalconSports</h4><p>Premium sportswear engineered for athletes.</p></div>
+      <div><h4>Shop</h4><a href="collection.html">Collection</a><a href="shoes.html">Shoes</a><a href="kitbuilder.html">Kit Builder</a><a href="about.html">About</a></div>
+      <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div class="footer-bottom">
+      <img src="falcon-stacked.png" alt="FalconSports" />
+      <p style="font-size:0.85rem;">© 2026 FalconSports. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== FIREBASE + MAIN ===== -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+    // =============================================================
+    //  ACCOUNT DASHBOARD LOGIC
+    // =============================================================
+
+    // ---- DOM refs ----
+    const avatarEl = document.getElementById('userAvatar');
+    const userNameEl = document.getElementById('userName');
+    const userEmailEl = document.getElementById('userEmail');
+    const displayNameInput = document.getElementById('displayNameInput');
+    const emailInput = document.getElementById('emailInput');
+
+    // ---- Theme toggle (reuse from index) ----
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    if (localStorage.getItem('falconSportsTheme') === 'dark') {
+      body.classList.add('dark');
+      themeIcon.className = 'fas fa-sun';
+    }
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      const isDark = body.classList.contains('dark');
+      themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+      localStorage.setItem('falconSportsTheme', isDark ? 'dark' : 'light');
+    });
+
+    // ---- Mobile menu ----
+    function openMobileMenu() {
+      document.getElementById('mobileMenu').classList.add('open');
+      document.getElementById('menuOverlay').classList.add('show');
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('menuOverlay').classList.remove('show');
+    }
+
+    // ---- Toast notifications ----
+    function showNotification(msg, type = 'info') {
+      const old = document.querySelector('.toast-msg');
+      if (old) old.remove();
+      const div = document.createElement('div');
+      div.className = 'toast-msg' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
+      div.textContent = msg;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3500);
+    }
+
+    // ---- Sidebar navigation ----
+    document.querySelectorAll('.sidebar-nav button[data-panel]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const panelId = this.dataset.panel;
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + panelId).classList.add('active');
+      });
+    });
+
+    // ---- Firebase Auth state ----
+    // Ensure auth is initialized in main.js
+    let currentUser = null;
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // Not signed in → redirect to signin
+        window.location.href = 'signin.html';
+        return;
+      }
+      currentUser = user;
+      // Populate UI
+      const name = user.displayName || 'Falcon Athlete';
+      const email = user.email || 'athlete@falconsports.com';
+      const initial = name.charAt(0).toUpperCase();
+
+      avatarEl.textContent = initial;
+      userNameEl.textContent = name;
+      userEmailEl.textContent = email;
+      displayNameInput.value = name;
+      emailInput.value = email;
+
+      // Load orders & addresses (mock data)
+      loadOrders();
+      loadAddresses();
+    });
+
+    // ---- Update profile ----
+    async function updateProfile() {
+      const newName = displayNameInput.value.trim();
+      if (!newName) { showNotification('Please enter a name.', 'error'); return; }
+      try {
+        await currentUser.updateProfile({ displayName: newName });
+        // Force reload user
+        await currentUser.reload();
+        const updatedUser = auth.currentUser;
+        userNameEl.textContent = updatedUser.displayName;
+        avatarEl.textContent = updatedUser.displayName.charAt(0).toUpperCase();
+        showNotification('Profile updated successfully!', 'success');
+      } catch (err) {
+        showNotification(err.message, 'error');
+      }
+    }
+
+    // ---- Change password ----
+    async function changePassword() {
+      const pwd = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      if (pwd.length < 6) { showNotification('Password must be at least 6 characters.', 'error'); return; }
+      if (pwd !== confirm) { showNotification('Passwords do not match.', 'error'); return; }
+      try {
+        await currentUser.updatePassword(pwd);
+        showNotification('Password updated successfully!', 'success');
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+      } catch (err) {
+        showNotification(err.message, 'error');
+      }
+    }
+
+    // ---- Sign out ----
+    function signOutUser() {
+      auth.signOut().then(() => {
+        showNotification('Signed out successfully.', 'success');
+        setTimeout(() => window.location.href = 'signin.html', 500);
+      }).catch(err => showNotification(err.message, 'error'));
+    }
+
+    // ---- Mock Orders ----
+    function loadOrders() {
+      const container = document.getElementById('orderList');
+      // Simulate order data (in real app, fetch from Firebase Firestore or your API)
+      const orders = [{
+        id: 'FS-2026-001',
+        date: '2026-06-28',
+        total: '₹4,299',
+        status: 'delivered',
+        items: 3
+      }, {
+        id: 'FS-2026-002',
+        date: '2026-07-01',
+        total: '₹8,450',
+        status: 'shipped',
+        items: 5
+      }, {
+        id: 'FS-2026-003',
+        date: '2026-07-03',
+        total: '₹2,199',
+        status: 'processing',
+        items: 2
+      }];
+
+      if (orders.length === 0) {
+        container.innerHTML = `<p class="subtitle">You haven't placed any orders yet.</p>`;
+        return;
+      }
+      container.innerHTML = orders.map(o => `
+        <div class="order-card">
+          <div class="order-info">
+            <strong>Order #${o.id}</strong>
+            <span>${o.date} · ${o.items} items · ₹${o.total}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <span class="order-status ${o.status}">${o.status}</span>
+            <button class="btn btn-sm btn-outline" onclick="showNotification('Tracking details for ${o.id}')"><i class="fas fa-truck"></i> Track</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ---- Mock Addresses ----
+    function loadAddresses() {
+      const container = document.getElementById('addressList');
+      const addresses = [
+        { label: 'Home', line: '123 Falcon Street, Sports City, 560001' },
+        { label: 'Work', line: '45 Arena Road, Downtown, 560002' }
+      ];
+      container.innerHTML = addresses.map(a => `
+        <div class="address-card">
+          <span class="addr-label"><i class="fas fa-tag"></i> ${a.label}</span>
+          ${a.line}
+        </div>
+      `).join('');
+    }
+
+    function addDummyAddress() {
+      const container = document.getElementById('addressList');
+      const div = document.createElement('div');
+      div.className = 'address-card';
+      div.innerHTML = `
+        <span class="addr-label"><i class="fas fa-tag"></i> New Address</span>
+        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          <input type="text" placeholder="Label (e.g. Gym)" style="flex:1; min-width:100px; padding:8px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text);" />
+          <input type="text" placeholder="Full address" style="flex:2; min-width:160px; padding:8px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text);" />
+          <button class="btn btn-sm btn-accent" onclick="saveNewAddress(this)">Save</button>
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
+    function saveNewAddress(btn) {
+      const row = btn.closest('.address-card');
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value && inputs[1].value) {
+        row.innerHTML = `
+          <span class="addr-label"><i class="fas fa-tag"></i> ${inputs[0].value}</span>
+          ${inputs[1].value}
+        `;
+        showNotification('Address saved!', 'success');
+      } else {
+        showNotification('Please fill in all fields.', 'error');
+      }
+    }
+
+    // ---- Extra: small btn style for inline ----
+    const style = document.createElement('style');
+    style.textContent = `
+      .btn-sm { padding: 6px 14px; font-size: 0.75rem; }
+      .mt-16 { margin-top: 16px; }
+      .btn-accent { background: var(--accent); color: #fff; }
+      .btn-accent:hover { background: var(--accent-hover); }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

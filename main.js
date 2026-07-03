@@ -1,8 +1,3 @@
-// =====================================================
-// FALCONSPORTS – main.js (shared across all pages)
-// =====================================================
-
-// ---------- FIREBASE CONFIG (fill with your own) ----------
 const firebaseConfig = {
   apiKey: "AIzaSyCRxgZqzsBPgpBmj33LGz733xvc8_SaEzY",
   authDomain: "pinrest-4k--wallpaper-gallery.firebaseapp.com",
@@ -12,9 +7,11 @@ const firebaseConfig = {
   appId: "1:1069141898009:web:96a3dcde8f26b9f12d8b88"
 };
 
-// Initialize Firebase (only if not already initialised)
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+// Initialise Firebase only once
+if (typeof firebase !== 'undefined') {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 }
 const auth = firebase.auth();
 
@@ -176,7 +173,72 @@ auth.onAuthStateChanged(user => {
     };
   }
 });
-
+// 👇 Add this to main.js (or product page script)
+document.addEventListener('DOMContentLoaded', () => {
+  // Listen for auth state changes
+  auth.onAuthStateChanged(user => {
+    const buttons = document.querySelectorAll('.add-to-cart-btn');
+    
+    if (!user) {
+      // 🔒 Not signed in → disable all add‑to‑cart buttons
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-lock"></i> Sign in to add';
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        // Override click to show notification
+        btn.onclick = (e) => {
+          e.preventDefault();
+          showNotification('Please sign in to add items to your cart.', 'error');
+          // (Optional) redirect to sign‑in page:
+          // window.location.href = 'signin.html';
+        };
+      });
+    } else {
+      // ✅ Signed in → enable all buttons
+      buttons.forEach(btn => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        // Restore your original click handler (if you have one)
+        // e.g., btn.onclick = yourOriginalAddToCartFunction;
+        // If you use event listeners, you can just re‑attach them here.
+      });
+    }
+  });
+});
+// Add this to your main.js or product page script
+document.addEventListener('DOMContentLoaded', () => {
+  // Watch auth state
+  auth.onAuthStateChanged(user => {
+    const addButtons = document.querySelectorAll('.add-to-cart-btn');
+    if (!user) {
+      // Disable all add-to-cart buttons and show a lock icon
+      addButtons.forEach(btn => {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-lock"></i> Sign in to add';
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        btn.onclick = (e) => {
+          e.preventDefault();
+          showNotification('Please sign in to add items to your cart.', 'error');
+          // Optionally redirect to sign-in page
+          // window.location.href = 'signin.html';
+        };
+      });
+    } else {
+      // Enable buttons
+      addButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        // Restore original click handler (assumes you have one)
+      });
+    }
+  });
+});
 // ---------- INITIAL UI UPDATE ----------
 document.addEventListener('DOMContentLoaded', () => {
   updateCartUI();

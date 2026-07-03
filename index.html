@@ -16,7 +16,6 @@
       --accent: #d32f2f; --accent-hover: #b71c1c; --gold: #c9a84c;
       --header-bg: rgba(255,255,255,0.85); --shadow: 0 8px 30px rgba(0,0,0,0.05);
       --card-bg: #ffffff; --btn-text: #ffffff; --btn-bg: #0a0a0a;
-      /* Hero images – replace with your own */
       --hero-bg-image: url('hero.png');
       --hero-overlay-bg: rgba(0,0,0,0.4);
       --footer-bg: #f5f5f5; --footer-text: #333; --footer-heading: #111;
@@ -93,7 +92,6 @@
       justify-content: center;
       overflow: hidden;
     }
-    /* On small screens, fit the whole image without cropping */
     @media (max-width: 600px) {
       .hero {
         height: auto;
@@ -143,6 +141,34 @@
       display:none; animation:slideIn 0.3s ease;
     }
     @keyframes slideIn { from{transform:translateX(120%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+
+    /* ===== ADDED: auth-loading state to avoid blinking ===== */
+    .user-icon-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.4rem;
+      min-height: 1.4rem;
+    }
+    .user-icon-wrapper .fa-user-circle {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .user-icon-wrapper.ready .fa-user-circle {
+      opacity: 1;
+    }
+    /* small spinner while loading */
+    .user-icon-wrapper .fa-spinner {
+      position: absolute;
+      font-size: 1.2rem;
+      color: var(--text);
+    }
+    .user-icon-wrapper.ready .fa-spinner {
+      display: none;
+    }
+    .user-icon-wrapper {
+      position: relative;
+    }
   </style>
 </head>
 <body>
@@ -158,10 +184,14 @@
         <a href="contact.html">Contact</a>
       </div>
       <div class="header-actions">
-         <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
+        <span class="hamburger" onclick="openMobileMenu()"><i class="fas fa-bars"></i></span>
         <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
         <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
-       <i class="far fa-user" onclick="window.location.href='signin.html'"></i>
+        <!-- USER ICON with loading spinner to prevent blink -->
+        <span class="user-icon-wrapper" id="userIconWrapper">
+          <i class="fas fa-spinner fa-pulse" id="userIconSpinner"></i>
+          <i class="fas fa-user-circle" id="userIcon" title="Sign in" style="font-size:1.4rem; position:relative;"></i>
+        </span>
       </div>
     </div>
   </header>
@@ -176,6 +206,9 @@
     <a href="kitbuilder.html" onclick="closeMobileMenu()">Kit Builder</a>
     <a href="about.html" onclick="closeMobileMenu()">About</a>
     <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+    <hr style="border-color:var(--border);">
+    <a href="account.html" onclick="closeMobileMenu()"><i class="fas fa-user-circle"></i> My Account</a>
+    <a href="#" onclick="closeMobileMenu(); signOutUser();"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
   </div>
 
   <!-- Hero -->
@@ -214,13 +247,21 @@
     </div>
   </footer>
 
+  <!-- ===== FIREBASE + AUTH ===== -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="main.js"></script>
+
   <script>
-    // Theme
+    // =============================================================
+    //  THEME TOGGLE
+    // =============================================================
     const body = document.body;
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     if (localStorage.getItem('falconSportsTheme') === 'dark') {
-      body.classList.add('dark'); themeIcon.className = 'fas fa-sun';
+      body.classList.add('dark');
+      themeIcon.className = 'fas fa-sun';
     }
     themeToggle.addEventListener('click', () => {
       body.classList.toggle('dark');
@@ -229,7 +270,9 @@
       localStorage.setItem('falconSportsTheme', isDark ? 'dark' : 'light');
     });
 
-    // Mobile menu
+    // =============================================================
+    //  MOBILE MENU
+    // =============================================================
     function openMobileMenu() {
       document.getElementById('mobileMenu').classList.add('open');
       document.getElementById('menuOverlay').classList.add('show');
@@ -238,41 +281,74 @@
       document.getElementById('mobileMenu').classList.remove('open');
       document.getElementById('menuOverlay').classList.remove('show');
     }
-  </script>
-  <script>
-  // Check if a user is logged in (demo)
-  (function() {
-    const user = JSON.parse(localStorage.getItem('falconUser'));
-    const accountIcon = document.querySelector('.header-actions .fa-user');
 
-    if (user && user.loggedIn) {
-      // Change the user icon to show logged‑in state (optional)
-      if (accountIcon) {
-        accountIcon.classList.remove('fa-user');
-        accountIcon.classList.add('fa-user-check');
-        accountIcon.title = `Signed in as ${user.email}`;
-        accountIcon.onclick = function() {
-          // Sign out
-          localStorage.removeItem('falconUser');
-          showNotification('Signed out');
-          location.reload();
-        };
-      }
-    } else {
-      // Not logged in – clicking the user icon goes to sign‑in page
-      if (accountIcon) {
-        accountIcon.onclick = function() {
-          window.location.href = 'signin.html';
-        };
-      }
+    // =============================================================
+    //  TOAST NOTIFICATION
+    // =============================================================
+    function showNotification(msg, type = 'info') {
+      const old = document.querySelector('.toast-msg');
+      if (old) old.remove();
+      const div = document.createElement('div');
+      div.className = 'toast-msg';
+      div.style.cssText = `
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 12px; padding: 14px 28px;
+        color: var(--text); font-weight: 600;
+        z-index: 9999; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        max-width: 90%; text-align: center;
+        border-left: 5px solid ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : 'var(--accent)'};
+        animation: fadeUp 0.3s ease;
+      `;
+      div.textContent = msg;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3500);
     }
-  })();
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="main.js"></script>
-  <script src="main.js"></script>
-  
 
+    // =============================================================
+    //  AUTH STATE LISTENER – with loading state to avoid blinking
+    // =============================================================
+    const userIcon = document.getElementById('userIcon');
+    const userIconWrapper = document.getElementById('userIconWrapper');
+
+    // Sign‑out function (used in mobile menu)
+    function signOutUser() {
+      auth.signOut().then(() => {
+        showNotification('Signed out successfully.', 'success');
+        // UI updates automatically via listener
+      }).catch(err => showNotification(err.message, 'error'));
+    }
+
+    // Single listener – runs once, no blinking
+    auth.onAuthStateChanged(user => {
+      // Remove spinner, show icon
+      userIconWrapper.classList.add('ready');
+
+      if (user) {
+        // Logged in – accent color, link to account, tooltip
+        userIcon.className = 'fas fa-user-circle';
+        userIcon.style.color = 'var(--accent)';
+        const displayName = user.displayName || 'Athlete';
+        userIcon.title = `Welcome, ${displayName}`;
+        userIcon.onclick = () => window.location.href = 'account.html';
+
+        // Mobile menu "Sign Out" links – wire them
+        document.querySelectorAll('.mobile-menu a[onclick*="signOutUser"]').forEach(el => {
+          el.onclick = (e) => { e.preventDefault(); closeMobileMenu(); signOutUser(); };
+        });
+      } else {
+        // Not logged in – normal color, link to sign‑in
+        userIcon.className = 'fas fa-user-circle';
+        userIcon.style.color = 'var(--text)';
+        userIcon.title = 'Sign in';
+        userIcon.onclick = () => window.location.href = 'signin.html';
+
+        // Reset mobile menu sign‑out links (no action)
+        document.querySelectorAll('.mobile-menu a[onclick*="signOutUser"]').forEach(el => {
+          el.onclick = null;
+        });
+      }
+    });
+  </script>
 </body>
 </html>
