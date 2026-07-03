@@ -253,23 +253,7 @@
   <script src="main.js"></script>
 
   <script>
-    // =============================================================
-    //  THEME TOGGLE
-    // =============================================================
-    const body = document.body;
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = themeToggle.querySelector('i');
-    if (localStorage.getItem('falconSportsTheme') === 'dark') {
-      body.classList.add('dark');
-      themeIcon.className = 'fas fa-sun';
-    }
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      const isDark = body.classList.contains('dark');
-      themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-      localStorage.setItem('falconSportsTheme', isDark ? 'dark' : 'light');
-    });
-
+   
     // =============================================================
     //  MOBILE MENU
     // =============================================================
@@ -350,5 +334,6 @@
       }
     });
   </script>
+  
 </body>
 </html>
