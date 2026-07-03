@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>FalconSports | Sign In</title>
-  <meta name="description" content="Sign in to your FalconSports account – track orders, save kits, and more.">
+  <meta name="description" content="Sign in to your FalconSports account.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
@@ -12,167 +12,33 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="falcon-symbol.png">
   <style>
-    /* Page‑specific overrides */
-    .signin-page {
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 0;
-    }
-    .signin-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 450px;
-      width: 100%;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-md);
-      animation: fadeUp 0.6s ease;
-    }
+    /* same as before – omitted for brevity (copy from earlier signin page) */
+    .signin-page { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 60px 0; }
+    .signin-card { background: var(--card-bg); border-radius: 20px; padding: 40px; max-width: 450px; width: 100%; border: 1px solid var(--border); box-shadow: var(--shadow-md); animation: fadeUp 0.6s; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    .signin-card h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    .signin-card p {
-      text-align: center;
-      opacity: 0.8;
-      margin-bottom: 30px;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--input-bg);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(211,47,47,0.1);
-    }
-    .forgot-password {
-      text-align: right;
-      margin-bottom: 20px;
-    }
-    .forgot-password a {
-      color: var(--accent);
-      font-size: 0.9rem;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .forgot-password a:hover {
-      text-decoration: underline;
-    }
-    .btn {
-      width: 100%;
-      padding: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      transform: translateY(-2px);
-    }
-    .signup-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.95rem;
-    }
-    .signup-link a {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .signup-link a:hover {
-      text-decoration: underline;
-    }
-    .or-divider {
-      display: flex;
-      align-items: center;
-      margin: 25px 0;
-      color: #888;
-    }
-    .or-divider::before, .or-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    .or-divider span {
-      padding: 0 15px;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-    }
-    .social-login {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-    }
-    .social-btn {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--surface);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 600;
-      transition: 0.2s;
-      color: var(--text);
-    }
-    .social-btn:hover {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
+    .signin-card h2 { font-size: 2rem; font-weight: 800; text-align: center; }
+    .signin-card p { text-align: center; opacity: 0.8; margin-bottom: 30px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { font-weight: 600; display: block; margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-size: 1rem; }
+    .btn { width: 100%; padding: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .social-btn { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text); }
+    .social-btn:hover { background: var(--accent); color: white; }
+    .or-divider { display: flex; align-items: center; margin: 25px 0; color: #888; }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .or-divider span { padding: 0 15px; }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
+  <!-- HEADER & MOBILE MENU (same as other pages) -->
   <header>
     <div class="container navbar">
       <a href="index.html" class="logo"><img src="falcon-horizontal.png" alt="FalconSports" class="nav-logo"></a>
       <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="collection.html">Collection</a>
-        <a href="shoes.html">Shoes</a>
-        <a href="kitbuilder.html">Kit Builder</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
+        <a href="index.html">Home</a> <a href="collection.html">Collection</a> <a href="shoes.html">Shoes</a>
+        <a href="kitbuilder.html">Kit Builder</a> <a href="about.html">About</a> <a href="contact.html">Contact</a>
       </div>
       <div class="header-actions">
         <i class="fas fa-shopping-bag" onclick="window.location.href='cart.html'"></i>
@@ -181,8 +47,6 @@
       </div>
     </div>
   </header>
-
-  <!-- MOBILE MENU -->
   <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
   <div class="mobile-menu" id="mobileMenu">
     <span class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></span>
@@ -194,13 +58,13 @@
     <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
   </div>
 
-  <!-- SIGN IN FORM -->
   <div class="container signin-page">
     <div class="signin-card">
       <h2>Welcome Back</h2>
       <p>Sign in to your FalconSports account</p>
 
-      <form id="signinForm" onsubmit="handleSignIn(event)">
+      <!-- Email/Password form -->
+      <form id="emailSignInForm" onsubmit="signInWithEmail(event)">
         <div class="form-group">
           <label>Email</label>
           <input type="email" id="email" placeholder="you@example.com" required>
@@ -209,28 +73,24 @@
           <label>Password</label>
           <input type="password" id="password" placeholder="••••••••" required>
         </div>
-        <div class="forgot-password">
-          <a href="#">Forgot password?</a>
-        </div>
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-sign-in-alt"></i> Sign In
-        </button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
       </form>
 
       <div class="or-divider"><span>or</span></div>
 
-      <div class="social-login">
-        <button class="social-btn" onclick="showNotification('Google sign‑in coming soon')">
-          <i class="fab fa-google"></i> Google
+      <!-- Social logins -->
+      <div style="display: flex; gap: 12px; flex-direction: column;">
+        <button class="social-btn" onclick="signInWithGoogle()">
+          <i class="fab fa-google"></i> Continue with Google
         </button>
-        <button class="social-btn" onclick="showNotification('Apple sign‑in coming soon')">
-          <i class="fab fa-apple"></i> Apple
+        <button class="social-btn" onclick="signInWithApple()">
+          <i class="fab fa-apple"></i> Continue with Apple
         </button>
       </div>
 
-      <div class="signup-link">
+      <p style="text-align: center; margin-top: 20px;">
         Don't have an account? <a href="register.html">Create one</a>
-      </div>
+      </p>
     </div>
   </div>
 
@@ -246,37 +106,55 @@
     </div>
   </footer>
 
-  <!-- GLOBAL JS (theme, menu, notifications) -->
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="main.js"></script>
   <script>
-    // Sign‑in handler (demo – replace with real authentication later)
-    function handleSignIn(event) {
+    // Sign in with Email/Password
+    async function signInWithEmail(event) {
       event.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
-
-      if (!email || !password) {
-        showNotification('Please fill in both fields.');
-        return;
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        showNotification('Signed in!');
+        setTimeout(() => window.location.href = 'index.html', 500);
+      } catch (error) {
+        showNotification(error.message);
       }
-
-      // Simulate a successful login (in production, send a POST request to your backend)
-      // For now, store a dummy session token and redirect
-      localStorage.setItem('falconUser', JSON.stringify({ email, loggedIn: true }));
-      showNotification('Signed in successfully!');
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 1000);
     }
 
-    // Auto‑fill if already "logged in" (demo)
-    (function() {
-      const user = JSON.parse(localStorage.getItem('falconUser'));
-      if (user && user.loggedIn) {
-        document.getElementById('email').value = user.email || '';
-        document.getElementById('password').value = ''; // Clear password field
+    // Sign in with Google
+    async function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+        showNotification('Signed in with Google!');
+        setTimeout(() => window.location.href = 'index.html', 500);
+      } catch (error) {
+        showNotification(error.message);
       }
-    })();
+    }
+
+    // Sign in with Apple
+    async function signInWithApple() {
+      const provider = new firebase.auth.OAuthProvider('apple.com');
+      provider.addScope('email');
+      provider.addScope('name');
+      try {
+        await auth.signInWithPopup(provider);
+        showNotification('Signed in with Apple!');
+        setTimeout(() => window.location.href = 'index.html', 500);
+      } catch (error) {
+        showNotification(error.message);
+      }
+    }
   </script>
+    <script src="main.js"></script>
+    <!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<!-- Firebase Authentication -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </body>
 </html>

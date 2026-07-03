@@ -1,7 +1,19 @@
 // =====================================================
 // FALCONSPORTS – main.js (shared across all pages)
 // =====================================================
+// ---------- FIREBASE CONFIG ----------
+const firebaseConfig = {
+    apiKey: "AIzaSyCRxgZqzsBPgpBmj33LGz733xvc8_SaEzY",
+    authDomain: "pinrest-4k--wallpaper-gallery.firebaseapp.com",
+    projectId: "pinrest-4k--wallpaper-gallery",
+    storageBucket: "pinrest-4k--wallpaper-gallery.firebasestorage.app",
+    messagingSenderId: "1069141898009",
+    appId: "1:1069141898009:web:96a3dcde8f26b9f12d8b88"
+  };
 
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 // ---------- API CONFIG ----------
 const API_URL = '/api';
 
@@ -41,7 +53,30 @@ function closeMobileMenu() {
 }
 window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
+// ---------- AUTH STATE LISTENER ----------
+auth.onAuthStateChanged(user => {
+  const accountIcon = document.querySelector('.header-actions .fa-user');
+  if (!accountIcon) return;
 
+  if (user) {
+    // User is signed in
+    accountIcon.classList.remove('fa-user');
+    accountIcon.classList.add('fa-user-check');
+    accountIcon.title = `Signed in as ${user.email}`;
+    accountIcon.onclick = () => {
+      auth.signOut();
+      showNotification('Signed out');
+    };
+  } else {
+    // No user signed in
+    accountIcon.classList.remove('fa-user-check');
+    accountIcon.classList.add('fa-user');
+    accountIcon.title = 'Sign in';
+    accountIcon.onclick = () => {
+      window.location.href = 'signin.html';
+    };
+  }
+});
 // ---------- NOTIFICATION SYSTEM ----------
 function showNotification(message) {
   const notification = document.getElementById('notification');
