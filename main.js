@@ -7,13 +7,13 @@
 
   // ---------- FIREBASE CONFIG ----------
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+  apiKey: "AIzaSyCRxgZqzsBPgpBmj33LGz733xvc8_SaEzY",
+  authDomain: "pinrest-4k--wallpaper-gallery.firebaseapp.com",
+  projectId: "pinrest-4k--wallpaper-gallery",
+  storageBucket: "pinrest-4k--wallpaper-gallery.firebasestorage.app",
+  messagingSenderId: "1069141898009",
+  appId: "1:1069141898009:web:96a3dcde8f26b9f12d8b88"
+};
 
   // Initialize Firebase ONLY if SDK is loaded
   let auth = null;
@@ -27,6 +27,9 @@
     console.warn('⚠️ Firebase SDK not loaded. Auth features will not work.');
   }
 
+  // ✅ Make auth globally accessible for inline scripts
+  window.auth = auth;
+
   // ---------- API CONFIG ----------
   const API_URL = '/api';
 
@@ -37,7 +40,7 @@
     const icon = toggle.querySelector('i');
     if (!icon) return;
 
-    const body = document.body;   // declared only here
+    const body = document.body;
 
     if (localStorage.getItem('falconSportsTheme') === 'dark') {
       body.classList.add('dark');

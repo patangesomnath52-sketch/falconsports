@@ -113,7 +113,7 @@
   </footer>
 
   <!-- SCRIPTS – main.js handles theme, mobile menu, cart, notifications -->
-  <script src="main.js"></script>
+ 
   <script>
     (() => {
       const API_URL = 'http://localhost:5000/api';
@@ -236,5 +236,11 @@
       loadShoes();
     })();
   </script>
+<!-- 🔥 Firebase SDKs – load FIRST -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<!-- Your main script -->
+<script src="main.js"></script>
 </body>
 </html>
