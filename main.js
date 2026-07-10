@@ -31,7 +31,7 @@
   window.auth = auth;
 
   // ---------- API CONFIG ----------
-  const API_URL = '/api';
+ const API_URL = '/api';
 
   // ---------- THEME TOGGLE ----------
   (function initTheme() {
